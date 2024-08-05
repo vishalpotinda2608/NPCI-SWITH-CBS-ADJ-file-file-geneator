@@ -11,3 +11,10 @@ Make sure you have [Node.js](https://nodejs.org/) and [TypeScript](https://www.t
 
    ```bash
    tsc index.ts
+
+2. **Run index.js with Node**
+
+   Run the following command:
+   
+   ```bash
+   node index.js
