@@ -5,12 +5,12 @@ import { beneficiaryTypes, generateRandomTime, MCC_CODE, merchantVPAs } from '..
 
 export function* generateNpciData(count: number, date: string,commonData): IterableIterator<NPCI_TXN> {
     for (let i = 0; i < count; i++) {
-        const { TXNID, AMOUNT,NPCI_CODE ,PAYEE_VPA,PAYER_VPA} = commonData[i];
+        const { TXNID, AMOUNT,NPCI_CODE ,PAYEE_VPA,PAYER_VPA,RRN} = commonData[i];
         yield {
             NPCI_TXN_TYPE: 'TX',
             NPCI_STATUS: 'U2',
             TXNID: TXNID,
-            RRN: faker.random.numeric(12),
+            RRN: RRN,
             NPCI_CODE: NPCI_CODE[0],
             DATE: date,
             TIME: generateRandomTime(),

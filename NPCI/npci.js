@@ -32,7 +32,7 @@ var faker_1 = require("@faker-js/faker");
 var constant_1 = require("../Constants/constant");
 //NPCI
 function generateNpciData(count, date, commonData) {
-    var i, _a, TXNID, AMOUNT, NPCI_CODE, PAYEE_VPA, PAYER_VPA;
+    var i, _a, TXNID, AMOUNT, NPCI_CODE, PAYEE_VPA, PAYER_VPA, RRN;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -40,12 +40,12 @@ function generateNpciData(count, date, commonData) {
                 _b.label = 1;
             case 1:
                 if (!(i < count)) return [3 /*break*/, 4];
-                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, NPCI_CODE = _a.NPCI_CODE, PAYEE_VPA = _a.PAYEE_VPA, PAYER_VPA = _a.PAYER_VPA;
+                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, NPCI_CODE = _a.NPCI_CODE, PAYEE_VPA = _a.PAYEE_VPA, PAYER_VPA = _a.PAYER_VPA, RRN = _a.RRN;
                 return [4 /*yield*/, {
                         NPCI_TXN_TYPE: 'TX',
                         NPCI_STATUS: 'U2',
                         TXNID: TXNID,
-                        RRN: faker_1.faker.random.numeric(12),
+                        RRN: RRN,
                         NPCI_CODE: NPCI_CODE[0],
                         DATE: date,
                         TIME: (0, constant_1.generateRandomTime)(),

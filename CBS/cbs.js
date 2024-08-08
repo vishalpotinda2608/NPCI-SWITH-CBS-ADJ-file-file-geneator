@@ -28,10 +28,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateCbsData = generateCbsData;
-var faker_1 = require("@faker-js/faker");
 // CBS
 function generateCbsData(count, date, commonData) {
-    var i, _a, TXNID, AMOUNT;
+    var i, _a, TXNID, AMOUNT, RRN;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -39,7 +38,7 @@ function generateCbsData(count, date, commonData) {
                 _b.label = 1;
             case 1:
                 if (!(i < count)) return [3 /*break*/, 4];
-                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT;
+                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, RRN = _a.RRN;
                 return [4 /*yield*/, {
                         A: 'S75960940',
                         DATE: date,
@@ -50,7 +49,7 @@ function generateCbsData(count, date, commonData) {
                         E: '2650',
                         F: '20012207843065',
                         G: '27111001182650',
-                        RRN: faker_1.faker.random.numeric(12),
+                        RRN: RRN,
                         H: date,
                         TXNID: TXNID,
                     }];

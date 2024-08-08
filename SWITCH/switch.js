@@ -32,7 +32,7 @@ var faker_1 = require("@faker-js/faker");
 var constant_1 = require("../Constants/constant");
 // SWITCH
 function generateSwitchData(count, date, commonData) {
-    var i, _a, TXNID, AMOUNT, NPCI_CODE, PAYEE_VPA, PAYER_VPA;
+    var i, _a, TXNID, AMOUNT, NPCI_CODE, PAYEE_VPA, PAYER_VPA, RRN;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -40,13 +40,13 @@ function generateSwitchData(count, date, commonData) {
                 _b.label = 1;
             case 1:
                 if (!(i < count)) return [3 /*break*/, 4];
-                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, NPCI_CODE = _a.NPCI_CODE, PAYEE_VPA = _a.PAYEE_VPA, PAYER_VPA = _a.PAYER_VPA;
+                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, NPCI_CODE = _a.NPCI_CODE, PAYEE_VPA = _a.PAYEE_VPA, PAYER_VPA = _a.PAYER_VPA, RRN = _a.RRN;
                 return [4 /*yield*/, {
                         'Date of txn': date,
                         Amount: AMOUNT,
                         'Resp Code': faker_1.faker.helpers.arrayElement(['S96', 'U09', 'U30', 'U31', 'U67', 'U78', '\N']),
                         'Status': NPCI_CODE[1],
-                        RRN: faker_1.faker.random.numeric(12),
+                        RRN: RRN,
                         'Ext id': faker_1.faker.string.uuid(),
                         'Payee Vpa': PAYEE_VPA,
                         'Txn Note': faker_1.faker.helpers.arrayElement(['payMerchant', 'Person', 'PayMerchant']),

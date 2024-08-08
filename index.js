@@ -45,7 +45,7 @@ var switch_1 = require("./SWITCH/switch");
 var cbs_1 = require("./CBS/cbs");
 var constant_1 = require("./Constants/constant");
 var adjustment_1 = require("./ADJUSTMENT/adjustment");
-var ROW_DATA = 10000;
+var ROW_DATA = 50000;
 var ensureDirectoryExists = function (filePath) {
     var directory = path.dirname(filePath);
     if (!fs.existsSync(directory)) {
@@ -63,7 +63,7 @@ function writeDataToCSV(filename, headers, dataGenerator) {
                         path: filename,
                         header: headers,
                     });
-                    batchSize = 10000;
+                    batchSize = 50000;
                     batch = [];
                     dataArray = Array.from(dataGenerator());
                     _i = 0, dataArray_1 = dataArray;
@@ -115,9 +115,10 @@ var generateCommonData = function (date, count) {
     return Array.from({ length: count }, function () { return ({
         TXNID: faker_1.faker.database.mongodbObjectId(),
         AMOUNT: faker_1.faker.finance.amount(),
-        NPCI_CODE: faker_1.faker.helpers.arrayElement([['00', 'SUCCESS'], ['0', 'SUCCESS'], ['RB', 'DEEMED'], ['Z9', 'FAILURE'], ['Z7', 'FAILURE']]),
+        NPCI_CODE: faker_1.faker.helpers.arrayElement([['00', 'SUCCESS'], ['0', 'SUCCESS'], ['RB', 'DEEMED'], ['Z9', 'FAILURE'], ['Z7', 'FAILURE'], ['00', 'SUCCESS'], ['00', 'SUCCESS'],]),
         PAYEE_VPA: faker_1.faker.helpers.arrayElement(constant_1.merchantVPAs),
-        PAYER_VPA: "".concat(faker_1.faker.internet.email().split('@')[0]).concat(faker_1.faker.helpers.arrayElement(constant_1.payerVpas))
+        PAYER_VPA: "".concat(faker_1.faker.internet.email().split('@')[0]).concat(faker_1.faker.helpers.arrayElement(constant_1.payerVpas)),
+        RRN: faker_1.faker.random.numeric(12)
     }); });
 };
 var generateDataForDateRange = function (startDate, numberOfDays, monthName) {
@@ -133,19 +134,19 @@ var generateDataForDateRange = function (startDate, numberOfDays, monthName) {
         // Generate data for the current date
         var commonData = generateCommonData(currentDate, ROW_DATA);
         // Write data to CSV files
-        writeDataToCSV("".concat(monthName, "/NPCI_DATA/").concat(filenameDate, "/UPIMERCHANTRAWDATAACQSBM").concat(filenameDate, ".csv"), constant_1.npciHeaders, function () { return (0, npci_1.generateNpciData)(ROW_DATA, npciFormattedDate, commonData); });
-        writeDataToCSV("".concat(monthName, "/SWITCH_DATA/").concat(filenameDate, "/switch_txns_").concat(filenameDate, ".csv"), constant_1.switchHeaders, function () { return (0, switch_1.generateSwitchData)(ROW_DATA, switchFormattedDate, commonData); });
-        writeDataToCSV("".concat(monthName, "/CBS_DATA/").concat(filenameDate, "/cbs_txns_").concat(filenameDate, ".csv"), constant_1.cbsHeaders, function () { return (0, cbs_1.generateCbsData)(ROW_DATA, formattedDate, commonData); });
-        writeDataToCSV("".concat(monthName, "/ADJUMENT/").concat(filenameDate, "/ADJUSTMENT").concat(filenameDate, ".csv"), constant_1.adjustHeaders, function () { return (0, adjustment_1.generateAdjustmentData)(ROW_DATA, formattedDate, commonData); });
+        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/NPCI_DATA/UPIMERCHANTRAWDATAACQSBM").concat(filenameDate, ".csv"), constant_1.npciHeaders, function () { return (0, npci_1.generateNpciData)(ROW_DATA, npciFormattedDate, commonData); });
+        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/SWITCH_DATA/switch_txns_").concat(filenameDate, ".csv"), constant_1.switchHeaders, function () { return (0, switch_1.generateSwitchData)(ROW_DATA, switchFormattedDate, commonData); });
+        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/CBS_DATA/cbs_txns_").concat(filenameDate, ".csv"), constant_1.cbsHeaders, function () { return (0, cbs_1.generateCbsData)(ROW_DATA, formattedDate, commonData); });
+        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/ADJUMENT/ADJUSTMENT").concat(filenameDate, ".csv"), constant_1.adjustHeaders, function () { return (0, adjustment_1.generateAdjustmentData)(ROW_DATA, formattedDate, commonData); });
     };
     for (var date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         _loop_1(date);
     }
 };
 // Usage example
-var startDate = new Date(2024, 6, 1); // August 1, 2024
-var numberOfDays = 30; // Number of days to generate data for
-var monthName = 'JULY';
+var startDate = new Date(2024, 7, 1); // August 1, 2024
+var numberOfDays = 5; // Number of days to generate data for
+var monthName = 'UPDATE_AUG';
 generateDataForDateRange(startDate, numberOfDays, monthName);
 // const commonData = generateCommonData(ROW_DATA);
 // // Generate date for files
