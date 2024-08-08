@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import  * as path from 'path';
+import * as path from 'path';
 import { createObjectCsvWriter } from 'csv-writer';
 import { faker } from '@faker-js/faker';
 import { generateNpciData } from './NPCI/npci'
@@ -8,7 +8,7 @@ import { generateCbsData } from './CBS/cbs'
 import { adjustHeaders, cbsHeaders, formatDate, formatDateForFilename, formatDateToDDMMYYYYHHMMSS, formatFullDateWithTimeSWITCH, merchantVPAs, npciHeaders, payerVpas, switchHeaders } from './Constants/constant';
 import { generateAdjustmentData } from './ADJUSTMENT/adjustment';
 
-const ROW_DATA=10000;
+const ROW_DATA = 1000;
 
 const ensureDirectoryExists = (filePath: string) => {
     const directory = path.dirname(filePath);
@@ -25,7 +25,7 @@ async function writeDataToCSV(filename: string, headers: any[], dataGenerator: (
         path: filename,
         header: headers,
     });
-    const batchSize = 10000;
+    const batchSize = 1000;
     let batch: any[] = [];
     const dataArray = Array.from(dataGenerator());
     for (let record of dataArray) {
@@ -65,7 +65,7 @@ const generateCommonData = (date, count) => {
 };
 
 
-const generateDataForDateRange = (startDate, numberOfDays,monthName) => {
+const generateDataForDateRange = (startDate, numberOfDays, monthName) => {
     const endDate = new Date(startDate);
     endDate.setDate(startDate.getDate() + numberOfDays - 1);
 
@@ -90,10 +90,10 @@ const generateDataForDateRange = (startDate, numberOfDays,monthName) => {
 };
 
 // Usage example
-const startDate = new Date(2024, 6, 1); // August 1, 2024
-const numberOfDays = 30; // Number of days to generate data for
-const monthName='JULY'
-generateDataForDateRange(startDate, numberOfDays,monthName);
+const startDate = new Date(2024, 8, 1); // August 1, 2024
+const numberOfDays = 2; // Number of days to generate data for
+const monthName = 'AUGUST'
+generateDataForDateRange(startDate, numberOfDays, monthName);
 
 
 

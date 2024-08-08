@@ -50,7 +50,7 @@ function generateCbsData(count, date, commonData) {
                         E: '2650',
                         F: '20012207843065',
                         G: '27111001182650',
-                        RRN: faker_1.faker.random.numeric(12),
+                        RRN: faker_1.faker.string.numeric(12),
                         H: date,
                         TXNID: TXNID,
                     }];

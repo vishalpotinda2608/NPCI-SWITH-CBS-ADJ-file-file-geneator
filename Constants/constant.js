@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MCC_CODE = exports.merchantVPAs = exports.payerVpas = exports.beneficiaryTypes = exports.adjustmentType = exports.adjustHeaders = exports.cbsHeaders = exports.switchHeaders = exports.npciHeaders = void 0;
 exports.generateRandomTime = generateRandomTime;
 exports.formatDateToDDMMYYYYHHMMSS = formatDateToDDMMYYYYHHMMSS;
+exports.formatDateToYYMMDDHHMMSS = formatDateToYYMMDDHHMMSS;
 exports.formatDate = formatDate;
 exports.formatFullDateWithTimeSWITCH = formatFullDateWithTimeSWITCH;
 exports.formatDateForFilename = formatDateForFilename;
@@ -198,71 +199,81 @@ function generateRandomTime() {
 }
 exports.merchantVPAs = [
     // Digital Goods: Games-5816	
-    'gaming.car@sbm',
-    'gaming.bike@sbm',
-    'gaming.truck@sbm',
-    'gaming.boat@sbm',
-    'gaming.airplane@sbm',
-    'gaming.scooter@sbm',
-    'gaming.helmet@sbm',
-    'gaming.robot@sbm',
-    'gaming.submarine@sbm',
-    'gaming.drone@sbm',
+    'airpay.car@timecosmos',
+    'airpay.bike@timecosmos',
+    'airpay.truck@timecosmos',
+    'airpay.boat@timecosmos',
+    'airpay.airplane@timecosmos',
+    'airpay.scooter@timecosmos',
+    'airpay.helmet@timecosmos',
+    'airpay.robot@timecosmos',
+    'airpay.submarine@timecosmos',
+    'airpay.drone@timecosmos',
     //Fast Food Restaurants-5814
-    'dining.pizza@sbm',
-    'dining.burger@sbm',
-    'dining.sushi@sbm',
-    'dining.pasta@sbm',
-    'dining.tacos@sbm',
-    'dining.soup@sbm',
-    'dining.salad@sbm',
-    'dining.steak@sbm',
-    'dining.dessert@sbm',
-    'dining.vegetarian@sbm',
-    // Grocery Stores, Supermarkets-5411
-    'grocery.freshmart@sbm',
-    'grocery.marketplace@sbm',
-    'grocery.sbmrite@sbm',
-    'grocery.foodland@sbm',
-    'grocery.greenbasket@sbm',
-    'grocery.dailygrocer@sbm',
-    'grocery.bulkstore@sbm',
-    'grocery.organic@sbm',
-    'grocery.corner@sbm',
-    'grocery.town@sbm',
-    // Travel Agencies - 4722
-    'travel.explore@sbm',
-    'travel.wander@sbm',
-    'travel.adventure@sbm',
-    'travel.getaway@sbm',
-    'travel.destinations@sbm',
-    'travel.escape@sbm',
-    'travel.vacation@sbm',
-    'travel.tour@sbm',
-    'travel.globetrot@sbm',
-    'travel.expedition@sbm',
-    // Telecommunication Services-4814
-    'telecom.mobile@sbm',
-    'telecom.internet@sbm',
-    'telecom.cable@sbm',
-    'telecom.voip@sbm',
-    'telecom.fiber@sbm',
-    'telecom.data@sbm',
-    'telecom.broadband@sbm',
-    'telecom.satellite@sbm',
-    'telecom.wireless@sbm',
-    'telecom.convergence@sbm'
+    'razorpay.pizza@timecosmos',
+    'razorpay.burger@timecosmos',
+    'razorpay.sushi@timecosmos',
+    'razorpay.pasta@timecosmos',
+    'razorpay.tacos@timecosmos',
+    'razorpay.soup@timecosmos',
+    'razorpay.salad@timecosmos',
+    'razorpay.steak@timecosmos',
+    'razorpay.dessert@timecosmos',
+    'razorpay.vegetarian@timecosmos',
+    // finopay Stores, Supermarkets-5411
+    'finopay.freshmart@timecosmos',
+    'finopay.marketplace@timecosmos',
+    'finopay.timecosmosrite@timecosmos',
+    'finopay.foodland@timecosmos',
+    'finopay.greenbasket@timecosmos',
+    'finopay.dailygrocer@timecosmos',
+    'finopay.bulkstore@timecosmos',
+    'finopay.organic@timecosmos',
+    'finopay.corner@timecosmos',
+    'finopay.town@timecosmos',
+    // tripay Agencies - 4722
+    'tripay.explore@timecosmos',
+    'tripay.wander@timecosmos',
+    'tripay.adventure@timecosmos',
+    'tripay.getaway@timecosmos',
+    'tripay.destinations@timecosmos',
+    'tripay.escape@timecosmos',
+    'tripay.vacation@timecosmos',
+    'tripay.tour@timecosmos',
+    'tripay.globetrot@timecosmos',
+    'tripay.expedition@timecosmos',
+    // jiopaymunication Services-4814
+    'jiopay.mobile@timecosmos',
+    'jiopay.internet@timecosmos',
+    'jiopay.cable@timecosmos',
+    'jiopay.voip@timecosmos',
+    'jiopay.fiber@timecosmos',
+    'jiopay.data@timecosmos',
+    'jiopay.broadband@timecosmos',
+    'jiopay.satellite@timecosmos',
+    'jiopay.wireless@timecosmos',
+    'jiopay.convergence@timecosmos'
 ];
 exports.MCC_CODE = {
-    "gaming": "5816",
-    "dining": "5814",
-    "grocery": "5411",
-    "travel": "4722",
-    "telecom": "4814"
+    "airpay": "5816",
+    "razorpay": "5814",
+    "finopay": "5411",
+    "tripay": "4722",
+    "jiopay": "4814"
 };
 //DATE
-// Function to format date to 'DD-MM-YYYY HH:mm:ss' format
+// Function to format date to 'DD-MM-YYYY HH:mm:ss' format YYYY=MM-DD HH:mm:ss (for cosmos)
 function formatDateToDDMMYYYYHHMMSS(date) {
+    var day = String(date.getDate()).padStart(2, '0');
+    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var year = date.getFullYear();
+    var hours = String(date.getHours()).padStart(2, '0');
+    var minutes = String(date.getMinutes()).padStart(2, '0');
+    var seconds = String(date.getSeconds()).padStart(2, '0');
+    return "".concat(day, "-").concat(month, "-").concat(year, " ").concat(hours, ":").concat(minutes, ":").concat(seconds);
+}
+function formatDateToYYMMDDHHMMSS(date) {
+    //todo: the date will be in format of 2024-07-16 23:59:53. break this to return 2024-07-16
     var day = String(date.getDate()).padStart(2, '0');
     var month = String(date.getMonth() + 1).padStart(2, '0');
     var year = date.getFullYear();
@@ -284,9 +295,8 @@ function formatFullDateWithTimeSWITCH(date) {
     var hours = String(date.getHours()).padStart(2, '0');
     var minutes = String(date.getMinutes()).padStart(2, '0');
     var seconds = String(date.getSeconds()).padStart(2, '0');
-    return "".concat(day, "-").concat(month, "-").concat(year, " ").concat(hours, ":").concat(minutes, ":").concat(seconds);
+    return "".concat(year, "-").concat(month, "-").concat(day, " ").concat(hours, ":").concat(minutes, ":").concat(seconds);
 }
-// Function to format date to 'YYYYMMDD' for filename
 function formatDateForFilename(date) {
     var day = String(date.getDate()).padStart(2, '0');
     var month = String(date.getMonth() + 1).padStart(2, '0');

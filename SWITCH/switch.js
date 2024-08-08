@@ -46,7 +46,7 @@ function generateSwitchData(count, date, commonData) {
                         Amount: AMOUNT,
                         'Resp Code': faker_1.faker.helpers.arrayElement(['S96', 'U09', 'U30', 'U31', 'U67', 'U78', '\N']),
                         'Status': NPCI_CODE[1],
-                        RRN: faker_1.faker.random.numeric(12),
+                        RRN: faker_1.faker.string.numeric(12),
                         'Ext id': faker_1.faker.string.uuid(),
                         'Payee Vpa': PAYEE_VPA,
                         'Txn Note': faker_1.faker.helpers.arrayElement(['payMerchant', 'Person', 'PayMerchant']),
