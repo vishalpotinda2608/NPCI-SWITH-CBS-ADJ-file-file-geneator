@@ -9,7 +9,7 @@ exports.formatFullDateWithTimeSWITCH = formatFullDateWithTimeSWITCH;
 exports.formatDateForFilename = formatDateForFilename;
 // Define headers for each type of data
 exports.npciHeaders = [
-    { id: 'NPCI_TX_TYPE', title: 'NPCI_TX_TYPE' },
+    { id: 'NPCI_TXN_TYPE', title: 'NPCI_TXN_TYPE' },
     { id: 'NPCI_STATUS', title: 'NPCI_STATUS' },
     { id: 'TXNID', title: 'TXNID' },
     { id: 'RRN', title: 'RRN' },
