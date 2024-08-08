@@ -8,7 +8,7 @@ import { generateCbsData } from './CBS/cbs'
 import { adjustHeaders, cbsHeaders, formatDate, formatDateForFilename, formatDateToDDMMYYYYHHMMSS, formatFullDateWithTimeSWITCH, merchantVPAs, npciHeaders, payerVpas, switchHeaders } from './Constants/constant';
 import { generateAdjustmentData } from './ADJUSTMENT/adjustment';
 
-const ROW_DATA = 1000;
+const ROW_DATA = 100;
 
 const ensureDirectoryExists = (filePath: string) => {
     const directory = path.dirname(filePath);
@@ -25,7 +25,7 @@ async function writeDataToCSV(filename: string, headers: any[], dataGenerator: (
         path: filename,
         header: headers,
     });
-    const batchSize = 1000;
+    const batchSize = 100;
     let batch: any[] = [];
     const dataArray = Array.from(dataGenerator());
     for (let record of dataArray) {
@@ -56,7 +56,7 @@ async function writeDataToCSV(filename: string, headers: any[], dataGenerator: (
 // Generate common TXNID and AMOUNT once and reuse
 const generateCommonData = (date, count) => {
     return Array.from({ length: count }, () => ({
-        TXNID: faker.database.mongodbObjectId(),
+        TXNID: faker.string.fromCharacters('UPI012345678993802838383'),
         AMOUNT: faker.finance.amount(),
         NPCI_CODE: faker.helpers.arrayElement([['00', 'SUCCESS'], ['0', 'SUCCESS'], ['RB', 'DEEMED'], ['Z9', 'FAILURE'], ['Z7', 'FAILURE']]),
         PAYEE_VPA: faker.helpers.arrayElement(merchantVPAs),
@@ -90,42 +90,7 @@ const generateDataForDateRange = (startDate, numberOfDays, monthName) => {
 };
 
 // Usage example
-const startDate = new Date(2024, 8, 1); // August 1, 2024
+const startDate = new Date(2024, 6, 15); // August 1, 2024
 const numberOfDays = 2; // Number of days to generate data for
-const monthName = 'AUGUST'
+const monthName = 'JULY'
 generateDataForDateRange(startDate, numberOfDays, monthName);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const commonData = generateCommonData(ROW_DATA);
-
-
-// // Generate date for files
-// const currentDate = new Date();
-// const formattedDate = formatDateToDDMMYYYYHHMMSS(currentDate);
-// //NPCI
-// const npciFormatedDate=formatDate(currentDate)
-
-// //SWITCH
-// const switchFormatedDate=formatFullDateWithTimeSWITCH(currentDate)
-
-// //File
-// const filenameDate = formatDateForFilename(currentDate);
-
-// writeDataToCSV(`UPIMERCHANTRAWDATAACQSBM${filenameDate}.csv`, npciHeaders, () => generateNpciData(ROW_DATA, npciFormatedDate,commonData));
-// writeDataToCSV(`switch_txns_${filenameDate}.csv`, switchHeaders, () => generateSwitchData(ROW_DATA, switchFormatedDate,commonData));
-// writeDataToCSV(`cbs_txns_${filenameDate}.csv`, cbsHeaders, () => generateCbsData(ROW_DATA, formattedDate,commonData));
-// writeDataToCSV(`ADJUSTMENT${filenameDate}.csv`, adjustHeaders, () => generateAdjustmentData(ROW_DATA, formattedDate,commonData));

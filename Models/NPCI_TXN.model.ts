@@ -1,5 +1,5 @@
- export interface NPCI_TXN {
-    NPCI_TXN_TYPE: string | null;
+export interface NPCI_TXN {
+    NPCI_TXN_TYPE: string;
     NPCI_STATUS: string;
     TXNID: string;
     RRN: string | null;
@@ -7,22 +7,26 @@
     DATE: string;
     TIME: string | null;
     AMOUNT: string | number;
-    A: any;
-    B: any;
-    C: any;
-    D: any;
-    PSP: string | null;
-    E: any;
+    UMN: any;
+    MAPID: any;
+    INITMODE: any;
+    PURPOSECODE: any;
+    PAYERCODE: string | null;
+    PAYERMCC: any;
     PAYER_VPA: string | null;
-    F: any;
-    MCC: string | null;
+    PAYEECODE: any;
+    PAYEEMCC: string | null;
     PAYEE_VPA: string;
-    G: any;
-    H: any;
-    I: any;
-    J: any;
-    K: any;
-    L: any;
-    M: any;
-    N: any;
+    REMCODE: any;
+    REM_IFSC_CODE: any;
+    REM_ACC_TYPE: any;
+    REM_ACC_NUMBER: any;
+    BENCODE: any;
+    BEN_IFSC_CODE: any;
+    BEN_ACC_TYPE: any;
+    BEN_ACC_NUMBER: any;
+    LRN: any;
+    RE1: any;
+    RE2: any;
+    RE3: any;
 }
