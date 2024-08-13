@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import { generateNpciData } from './NPCI/npci'
 import { generateSwitchData } from './SWITCH/switch'
 import { generateCbsData } from './CBS/cbs'
-import { adjustHeaders, cbsHeaders, formatDate, formatDateForFilename, formatDateToDDMMYYYYHHMMSS, formatFullDateWithTimeSWITCH, merchantVPAs, npciHeaders, payerVpas, switchHeaders } from './Constants/constant';
+import { adjustHeaders, cbsHeaders, formatDate, formatDateForFilename, formatDateToDDMMYYYYHHMMSS, formatFullDateWithTimeCBS, formatFullDateWithTimeSWITCH, merchantVPAs, npciHeaders, payerVpas, switchHeaders } from './Constants/constant';
 import { generateAdjustmentData } from './ADJUSTMENT/adjustment';
 
 const ROW_DATA=50000;
@@ -77,6 +77,7 @@ const generateDataForDateRange = (startDate, numberOfDays,monthName) => {
         const formattedDate = formatDateToDDMMYYYYHHMMSS(currentDate);
         const npciFormattedDate = formatDate(currentDate);
         const switchFormattedDate = formatFullDateWithTimeSWITCH(currentDate);
+        const cbsFormattedDate = formatFullDateWithTimeCBS(currentDate);
         const filenameDate = formatDateForFilename(currentDate);
 
         // Generate data for the current date
@@ -86,14 +87,14 @@ const generateDataForDateRange = (startDate, numberOfDays,monthName) => {
         writeDataToCSV(`${monthName}/${filenameDate}/NPCI_DATA/UPIMERCHANTRAWDATAACQSBM${filenameDate}.csv`, npciHeaders, () => generateNpciData(ROW_DATA, npciFormattedDate, commonData));
         writeDataToCSV(`${monthName}/${filenameDate}/SWITCH_DATA/switch_txns_${filenameDate}.csv`, switchHeaders, () => generateSwitchData(ROW_DATA, switchFormattedDate, commonData));
         writeDataToCSV(`${monthName}/${filenameDate}/CBS_DATA/cbs_txns_${filenameDate}.csv`, cbsHeaders, () => generateCbsData(ROW_DATA, formattedDate, commonData));
-        writeDataToCSV(`${monthName}/${filenameDate}/ADJUMENT/ADJUSTMENT${filenameDate}.csv`, adjustHeaders, () => generateAdjustmentData(ROW_DATA, formattedDate, commonData));
+        writeDataToCSV(`${monthName}/${filenameDate}/ADJUMENT/ADJUSTMENT${filenameDate}.csv`, adjustHeaders, () => generateAdjustmentData(ROW_DATA, cbsFormattedDate, commonData));
     }
 };
 
 // Usage example
-const startDate = new Date(2024, 7, 1); // August 1, 2024
+const startDate = new Date(2024, 4, 1); // August 1, 2024
 const numberOfDays = 5; // Number of days to generate data for
-const monthName='UPDATE_AUG'
+const monthName='MAY'
 generateDataForDateRange(startDate, numberOfDays,monthName);
 
 

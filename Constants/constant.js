@@ -5,6 +5,7 @@ exports.generateRandomTime = generateRandomTime;
 exports.formatDateToDDMMYYYYHHMMSS = formatDateToDDMMYYYYHHMMSS;
 exports.formatDate = formatDate;
 exports.formatFullDateWithTimeSWITCH = formatFullDateWithTimeSWITCH;
+exports.formatFullDateWithTimeCBS = formatFullDateWithTimeCBS;
 exports.formatDateForFilename = formatDateForFilename;
 // Define headers for each type of data
 exports.npciHeaders = [
@@ -285,6 +286,15 @@ function formatFullDateWithTimeSWITCH(date) {
     var minutes = String(date.getMinutes()).padStart(2, '0');
     var seconds = String(date.getSeconds()).padStart(2, '0');
     return "".concat(day, "-").concat(month, "-").concat(year, " ").concat(hours, ":").concat(minutes, ":").concat(seconds);
+}
+function formatFullDateWithTimeCBS(date) {
+    var day = String(date.getDate()).padStart(2, '0');
+    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var year = date.getFullYear();
+    var hours = String(date.getHours()).padStart(2, '0');
+    var minutes = String(date.getMinutes()).padStart(2, '0');
+    var seconds = String(date.getSeconds()).padStart(2, '0');
+    return "".concat(day, "-").concat(month, "-").concat(year);
 }
 // Function to format date to 'YYYYMMDD' for filename
 function formatDateForFilename(date) {

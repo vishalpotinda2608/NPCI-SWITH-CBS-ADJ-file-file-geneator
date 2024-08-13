@@ -130,6 +130,7 @@ var generateDataForDateRange = function (startDate, numberOfDays, monthName) {
         var formattedDate = (0, constant_1.formatDateToDDMMYYYYHHMMSS)(currentDate);
         var npciFormattedDate = (0, constant_1.formatDate)(currentDate);
         var switchFormattedDate = (0, constant_1.formatFullDateWithTimeSWITCH)(currentDate);
+        var cbsFormattedDate = (0, constant_1.formatFullDateWithTimeCBS)(currentDate);
         var filenameDate = (0, constant_1.formatDateForFilename)(currentDate);
         // Generate data for the current date
         var commonData = generateCommonData(currentDate, ROW_DATA);
@@ -137,16 +138,16 @@ var generateDataForDateRange = function (startDate, numberOfDays, monthName) {
         writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/NPCI_DATA/UPIMERCHANTRAWDATAACQSBM").concat(filenameDate, ".csv"), constant_1.npciHeaders, function () { return (0, npci_1.generateNpciData)(ROW_DATA, npciFormattedDate, commonData); });
         writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/SWITCH_DATA/switch_txns_").concat(filenameDate, ".csv"), constant_1.switchHeaders, function () { return (0, switch_1.generateSwitchData)(ROW_DATA, switchFormattedDate, commonData); });
         writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/CBS_DATA/cbs_txns_").concat(filenameDate, ".csv"), constant_1.cbsHeaders, function () { return (0, cbs_1.generateCbsData)(ROW_DATA, formattedDate, commonData); });
-        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/ADJUMENT/ADJUSTMENT").concat(filenameDate, ".csv"), constant_1.adjustHeaders, function () { return (0, adjustment_1.generateAdjustmentData)(ROW_DATA, formattedDate, commonData); });
+        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/ADJUMENT/ADJUSTMENT").concat(filenameDate, ".csv"), constant_1.adjustHeaders, function () { return (0, adjustment_1.generateAdjustmentData)(ROW_DATA, cbsFormattedDate, commonData); });
     };
     for (var date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         _loop_1(date);
     }
 };
 // Usage example
-var startDate = new Date(2024, 7, 1); // August 1, 2024
+var startDate = new Date(2024, 4, 1); // August 1, 2024
 var numberOfDays = 5; // Number of days to generate data for
-var monthName = 'UPDATE_AUG';
+var monthName = 'MAY';
 generateDataForDateRange(startDate, numberOfDays, monthName);
 // const commonData = generateCommonData(ROW_DATA);
 // // Generate date for files
