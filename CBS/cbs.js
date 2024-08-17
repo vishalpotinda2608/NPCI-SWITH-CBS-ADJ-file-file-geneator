@@ -30,7 +30,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateCbsData = generateCbsData;
 // CBS
 function generateCbsData(count, date, commonData) {
-    var i, _a, TXNID, AMOUNT, RRN;
+    var i, _a, TXNID, AMOUNT, RRN, NPCI_CODE;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -38,7 +38,8 @@ function generateCbsData(count, date, commonData) {
                 _b.label = 1;
             case 1:
                 if (!(i < count)) return [3 /*break*/, 4];
-                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, RRN = _a.RRN;
+                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, RRN = _a.RRN, NPCI_CODE = _a.NPCI_CODE;
+                if (!((NPCI_CODE[0] == 'RB' && NPCI_CODE[1] == 'DEEMED') || (NPCI_CODE[0] == '00' && NPCI_CODE[1] == 'SUCCESS'))) return [3 /*break*/, 3];
                 return [4 /*yield*/, {
                         A: 'S75960940',
                         DATE: date,

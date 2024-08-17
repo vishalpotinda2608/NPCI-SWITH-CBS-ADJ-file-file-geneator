@@ -58,7 +58,7 @@ const generateCommonData = (date, count) => {
     return Array.from({ length: count }, () => ({
         TXNID: faker.database.mongodbObjectId(),
         AMOUNT: faker.finance.amount(),
-        NPCI_CODE: faker.helpers.arrayElement([['00', 'SUCCESS'], ['0', 'SUCCESS'], ['RB', 'DEEMED'], ['Z9', 'FAILURE'], ['Z7', 'FAILURE'],['00', 'SUCCESS'], ['00', 'SUCCESS'],]),
+        NPCI_CODE: faker.helpers.arrayElement([['00', 'SUCCESS'], ['00', 'SUCCESS'], ['RB', 'DEEMED'], ['Z9', 'FAILURE'],['00', 'FAILURE'], ['Z7', 'FAILURE'], ['Z7', 'SUCCESS'],['00', 'SUCCESS'], ['00', 'SUCCESS'],]),
         PAYEE_VPA: faker.helpers.arrayElement(merchantVPAs),
         PAYER_VPA: `${faker.internet.email().split('@')[0]}${faker.helpers.arrayElement(payerVpas)}`,
         RRN: faker.random.numeric(12)
@@ -92,42 +92,10 @@ const generateDataForDateRange = (startDate, numberOfDays,monthName) => {
 };
 
 // Usage example
-const startDate = new Date(2024, 4, 1); // August 1, 2024
-const numberOfDays = 5; // Number of days to generate data for
-const monthName='MAY'
+const startDate = new Date(2024, 7, 6); // August 1, 2024
+const numberOfDays = 1; // Number of days to generate data for
+const monthName='AUG'
 generateDataForDateRange(startDate, numberOfDays,monthName);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const commonData = generateCommonData(ROW_DATA);
-
-
-// // Generate date for files
-// const currentDate = new Date();
-// const formattedDate = formatDateToDDMMYYYYHHMMSS(currentDate);
-// //NPCI
-// const npciFormatedDate=formatDate(currentDate)
-
-// //SWITCH
-// const switchFormatedDate=formatFullDateWithTimeSWITCH(currentDate)
-
-// //File
-// const filenameDate = formatDateForFilename(currentDate);
-
-// writeDataToCSV(`UPIMERCHANTRAWDATAACQSBM${filenameDate}.csv`, npciHeaders, () => generateNpciData(ROW_DATA, npciFormatedDate,commonData));
-// writeDataToCSV(`switch_txns_${filenameDate}.csv`, switchHeaders, () => generateSwitchData(ROW_DATA, switchFormatedDate,commonData));
-// writeDataToCSV(`cbs_txns_${filenameDate}.csv`, cbsHeaders, () => generateCbsData(ROW_DATA, formattedDate,commonData));
-// writeDataToCSV(`ADJUSTMENT${filenameDate}.csv`, adjustHeaders, () => generateAdjustmentData(ROW_DATA, formattedDate,commonData));

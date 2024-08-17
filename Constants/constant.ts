@@ -200,28 +200,28 @@ export function generateRandomTime() {
 
 export const merchantVPAs=[
     // Digital Goods: Games-5816	
-    'gaming.car@sbm',
-    'gaming.bike@sbm',
-    'gaming.truck@sbm',
-    'gaming.boat@sbm',
-    'gaming.airplane@sbm',
-    'gaming.scooter@sbm',
-    'gaming.helmet@sbm',
-    'gaming.robot@sbm',
-    'gaming.submarine@sbm',
-    'gaming.drone@sbm',
+    'gamming.car@sbm',
+    'gamming.bike@sbm',
+    'gamming.truck@sbm',
+    'gamming.boat@sbm',
+    'gamming.airplane@sbm',
+    'gamming.scooter@sbm',
+    'gamming.helmet@sbm',
+    'gamming.robot@sbm',
+    'gamming.submarine@sbm',
+    'gamming.drone@sbm',
 
     //Fast Food Restaurants-5814
-    'dining.pizza@sbm',
-    'dining.burger@sbm',
-    'dining.sushi@sbm',
-    'dining.pasta@sbm',
-    'dining.tacos@sbm',
-    'dining.soup@sbm',
-    'dining.salad@sbm',
-    'dining.steak@sbm',
-    'dining.dessert@sbm',
-    'dining.vegetarian@sbm',
+    'dinning.pizza@sbm',
+    'dinning.burger@sbm',
+    'dinning.sushi@sbm',
+    'dinning.pasta@sbm',
+    'dinning.tacos@sbm',
+    'dinning.soup@sbm',
+    'dinning.salad@sbm',
+    'dinning.steak@sbm',
+    'dinning.dessert@sbm',
+    'dinning.vegetarian@sbm',
 
     // Grocery Stores, Supermarkets-5411
     'grocery.freshmart@sbm',
@@ -236,16 +236,16 @@ export const merchantVPAs=[
     'grocery.town@sbm',
 
     // Travel Agencies - 4722
-    'travel.explore@sbm',
-    'travel.wander@sbm',
-    'travel.adventure@sbm',
-    'travel.getaway@sbm',
-    'travel.destinations@sbm',
-    'travel.escape@sbm',
-    'travel.vacation@sbm',
-    'travel.tour@sbm',
-    'travel.globetrot@sbm',
-    'travel.expedition@sbm',
+    'traveler.explore@sbm',
+    'traveler.wander@sbm',
+    'traveler.adventure@sbm',
+    'traveler.getaway@sbm',
+    'traveler.destinations@sbm',
+    'traveler.escape@sbm',
+    'traveler.vacation@sbm',
+    'traveler.tour@sbm',
+    'traveler.globetrot@sbm',
+    'traveler.expedition@sbm',
 
     // Telecommunication Services-4814
    'telecom.mobile@sbm',
@@ -261,10 +261,10 @@ export const merchantVPAs=[
 ]
 
 export const MCC_CODE={
-    "gaming":"5816",
-    "dining":"5814",
+    "gamming":"5816",
+    "dinning":"5814",
     "grocery":"5411",
-    "travel":"4722",
+    "traveler":"4722",
     "telecom":"4814"
 }
 
