@@ -1,68 +1,62 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MCC_CODE = exports.merchantVPAs = exports.payerVpas = exports.beneficiaryTypes = exports.adjustmentType = exports.adjustHeaders = exports.cbsHeaders = exports.switchHeaders = exports.npciHeaders = void 0;
-exports.generateRandomTime = generateRandomTime;
-exports.formatDateToDDMMYYYYHHMMSS = formatDateToDDMMYYYYHHMMSS;
-exports.formatDate = formatDate;
-exports.formatFullDateWithTimeSWITCH = formatFullDateWithTimeSWITCH;
-exports.formatFullDateWithTimeCBS = formatFullDateWithTimeCBS;
-exports.formatDateForFilename = formatDateForFilename;
+exports.formatDateForFilename = exports.formatFullDateWithTimeCBS = exports.formatFullDateWithTimeSWITCH = exports.formatDate = exports.formatDateToDDMMYYYYHHMMSS = exports.MCC_CODE = exports.merchantVPAs = exports.generateRandomTime = exports.payerVpas = exports.beneficiaryTypes = exports.adjustmentType = exports.adjustHeaders = exports.cbsHeaders = exports.switchHeaders = exports.npciHeaders = void 0;
 // Define headers for each type of data
 exports.npciHeaders = [
-    { id: 'NPCI_TXN_TYPE', title: 'NPCI_TXN_TYPE' },
-    { id: 'NPCI_STATUS', title: 'NPCI_STATUS' },
-    { id: 'TXNID', title: 'TXNID' },
-    { id: 'RRN', title: 'RRN' },
-    { id: 'NPCI_CODE', title: 'NPCI_CODE' },
-    { id: 'DATE', title: 'DATE' },
-    { id: 'TIME', title: 'TIME' },
-    { id: 'AMOUNT', title: 'AMOUNT' },
-    { id: 'A', title: 'A' },
-    { id: 'B', title: 'B' },
-    { id: 'C', title: 'C' },
-    { id: 'D', title: 'D' },
-    { id: 'PSP', title: 'PSP' },
-    { id: 'E', title: 'E' },
-    { id: 'PAYER_VPA', title: 'PAYER_VPA' },
-    { id: 'F', title: 'F' },
-    { id: 'MCC', title: 'MCC' },
-    { id: 'PAYEE_VPA', title: 'PAYEE_VPA' },
-    { id: 'G', title: 'G' },
-    { id: 'H', title: 'H' },
-    { id: 'I', title: 'I' },
-    { id: 'J', title: 'J' },
-    { id: 'K', title: 'K' },
-    { id: 'L', title: 'L' },
-    { id: 'M', title: 'M' },
-    { id: 'N', title: 'N' },
+    { id: "NPCI_TXN_TYPE", title: "NPCI_TXN_TYPE" },
+    { id: "NPCI_STATUS", title: "NPCI_STATUS" },
+    { id: "TXNID", title: "TXNID" },
+    { id: "RRN", title: "RRN" },
+    { id: "NPCI_CODE", title: "NPCI_CODE" },
+    { id: "DATE", title: "DATE" },
+    { id: "TIME", title: "TIME" },
+    { id: "AMOUNT", title: "AMOUNT" },
+    { id: "A", title: "A" },
+    { id: "B", title: "B" },
+    { id: "C", title: "C" },
+    { id: "D", title: "D" },
+    { id: "PSP", title: "PSP" },
+    { id: "E", title: "E" },
+    { id: "PAYER_VPA", title: "PAYER_VPA" },
+    { id: "F", title: "F" },
+    { id: "MCC", title: "MCC" },
+    { id: "PAYEE_VPA", title: "PAYEE_VPA" },
+    { id: "G", title: "G" },
+    { id: "H", title: "H" },
+    { id: "I", title: "I" },
+    { id: "J", title: "J" },
+    { id: "K", title: "K" },
+    { id: "L", title: "L" },
+    { id: "M", title: "M" },
+    { id: "N", title: "N" },
 ];
 exports.switchHeaders = [
-    { id: 'Date of txn', title: 'Date of txn' },
-    { id: 'Amount', title: 'Amount' },
-    { id: 'Resp Code', title: 'Resp Code' },
-    { id: 'Status', title: 'Status' },
-    { id: 'RRN', title: 'RRN' },
-    { id: 'Ext id', title: 'Ext id' },
-    { id: 'Payee Vpa', title: 'Payee Vpa' },
-    { id: 'Txn Note', title: 'Txn Note' },
-    { id: 'Payer UPI ID', title: 'Payer UPI ID' },
-    { id: 'PayerName', title: 'PayerName' },
-    { id: 'Txn Id', title: 'Txn Id' },
-    { id: 'MCC', title: 'MCC' },
+    { id: "Date of txn", title: "Date of txn" },
+    { id: "Amount", title: "Amount" },
+    { id: "Resp Code", title: "Resp Code" },
+    { id: "Status", title: "Status" },
+    { id: "RRN", title: "RRN" },
+    { id: "Ext id", title: "Ext id" },
+    { id: "Payee Vpa", title: "Payee Vpa" },
+    { id: "Txn Note", title: "Txn Note" },
+    { id: "Payer UPI ID", title: "Payer UPI ID" },
+    { id: "PayerName", title: "PayerName" },
+    { id: "Txn Id", title: "Txn Id" },
+    { id: "MCC", title: "MCC" },
 ];
 exports.cbsHeaders = [
-    { id: 'A', title: 'A' },
-    { id: 'DATE', title: 'DATE' },
-    { id: 'AMOUNT', title: 'AMOUNT' },
-    { id: 'B', title: 'B' },
-    { id: 'C', title: 'C' },
-    { id: 'D', title: 'D' },
-    { id: 'E', title: 'E' },
-    { id: 'F', title: 'F' },
-    { id: 'G', title: 'G' },
-    { id: 'RRN', title: 'RRN' },
-    { id: 'H', title: 'H' },
-    { id: 'TXNID', title: 'TXNID' },
+    { id: "A", title: "A" },
+    { id: "DATE", title: "DATE" },
+    { id: "AMOUNT", title: "AMOUNT" },
+    { id: "B", title: "B" },
+    { id: "C", title: "C" },
+    { id: "D", title: "D" },
+    { id: "E", title: "E" },
+    { id: "F", title: "F" },
+    { id: "G", title: "G" },
+    { id: "RRN", title: "RRN" },
+    { id: "H", title: "H" },
+    { id: "TXNID", title: "TXNID" },
 ];
 exports.adjustHeaders = [
     { id: "Txnuid", title: "Txnuid" },
@@ -119,6 +113,8 @@ exports.adjustmentType = [
     "Chargeback Acceptance",
     "Chargeback Raise",
     "Complaint Raise",
+    "Arbitration Raise",
+    "Pre-Arbitration Raise",
     "Credit Adjustment",
     "Debit Reversal Confirmation",
     "Differed Chargeback Raise",
@@ -133,7 +129,7 @@ exports.adjustmentType = [
     "TCC",
     "Wrong Credit Chargeback Acceptance",
     "Wrong Credit Chargeback Raise",
-    "Wrong credit Representment"
+    "Wrong credit Representment",
 ];
 exports.beneficiaryTypes = [
     "YES",
@@ -169,7 +165,7 @@ exports.beneficiaryTypes = [
     "KVB",
     "IDC",
     "MBK",
-    "SIB"
+    "SIB",
 ];
 exports.payerVpas = [
     "@apl",
@@ -189,117 +185,123 @@ exports.payerVpas = [
     "@ybl",
     "@axl",
     "@timecosmos",
-    "@paytm"
+    "@paytm",
 ];
 function generateRandomTime() {
-    var hours = String(Math.floor(Math.random() * 24)).padStart(2, '0');
-    var minutes = String(Math.floor(Math.random() * 60)).padStart(2, '0');
-    var seconds = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+    var hours = String(Math.floor(Math.random() * 24)).padStart(2, "0");
+    var minutes = String(Math.floor(Math.random() * 60)).padStart(2, "0");
+    var seconds = String(Math.floor(Math.random() * 60)).padStart(2, "0");
     return "".concat(hours).concat(minutes).concat(seconds);
 }
+exports.generateRandomTime = generateRandomTime;
 exports.merchantVPAs = [
-    // Digital Goods: Games-5816	
-    'gamming.car@sbm',
-    'gamming.bike@sbm',
-    'gamming.truck@sbm',
-    'gamming.boat@sbm',
-    'gamming.airplane@sbm',
-    'gamming.scooter@sbm',
-    'gamming.helmet@sbm',
-    'gamming.robot@sbm',
-    'gamming.submarine@sbm',
-    'gamming.drone@sbm',
+    // Digital Goods: Games-5816
+    "gamming.car@sbm",
+    "gamming.bike@sbm",
+    "gamming.truck@sbm",
+    "gamming.boat@sbm",
+    "gamming.airplane@sbm",
+    "gamming.scooter@sbm",
+    "gamming.helmet@sbm",
+    "gamming.robot@sbm",
+    "gamming.submarine@sbm",
+    "gamming.drone@sbm",
     //Fast Food Restaurants-5814
-    'dinning.pizza@sbm',
-    'dinning.burger@sbm',
-    'dinning.sushi@sbm',
-    'dinning.pasta@sbm',
-    'dinning.tacos@sbm',
-    'dinning.soup@sbm',
-    'dinning.salad@sbm',
-    'dinning.steak@sbm',
-    'dinning.dessert@sbm',
-    'dinning.vegetarian@sbm',
+    "dinning.pizza@sbm",
+    "dinning.burger@sbm",
+    "dinning.sushi@sbm",
+    "dinning.pasta@sbm",
+    "dinning.tacos@sbm",
+    "dinning.soup@sbm",
+    "dinning.salad@sbm",
+    "dinning.steak@sbm",
+    "dinning.dessert@sbm",
+    "dinning.vegetarian@sbm",
     // Grocery Stores, Supermarkets-5411
-    'grocery.freshmart@sbm',
-    'grocery.marketplace@sbm',
-    'grocery.sbmrite@sbm',
-    'grocery.foodland@sbm',
-    'grocery.greenbasket@sbm',
-    'grocery.dailygrocer@sbm',
-    'grocery.bulkstore@sbm',
-    'grocery.organic@sbm',
-    'grocery.corner@sbm',
-    'grocery.town@sbm',
+    "grocery.freshmart@sbm",
+    "grocery.marketplace@sbm",
+    "grocery.sbmrite@sbm",
+    "grocery.foodland@sbm",
+    "grocery.greenbasket@sbm",
+    "grocery.dailygrocer@sbm",
+    "grocery.bulkstore@sbm",
+    "grocery.organic@sbm",
+    "grocery.corner@sbm",
+    "grocery.town@sbm",
     // Travel Agencies - 4722
-    'traveler.explore@sbm',
-    'traveler.wander@sbm',
-    'traveler.adventure@sbm',
-    'traveler.getaway@sbm',
-    'traveler.destinations@sbm',
-    'traveler.escape@sbm',
-    'traveler.vacation@sbm',
-    'traveler.tour@sbm',
-    'traveler.globetrot@sbm',
-    'traveler.expedition@sbm',
+    "traveler.explore@sbm",
+    "traveler.wander@sbm",
+    "traveler.adventure@sbm",
+    "traveler.getaway@sbm",
+    "traveler.destinations@sbm",
+    "traveler.escape@sbm",
+    "traveler.vacation@sbm",
+    "traveler.tour@sbm",
+    "traveler.globetrot@sbm",
+    "traveler.expedition@sbm",
     // Telecommunication Services-4814
-    'telecom.mobile@sbm',
-    'telecom.internet@sbm',
-    'telecom.cable@sbm',
-    'telecom.voip@sbm',
-    'telecom.fiber@sbm',
-    'telecom.data@sbm',
-    'telecom.broadband@sbm',
-    'telecom.satellite@sbm',
-    'telecom.wireless@sbm',
-    'telecom.convergence@sbm'
+    "telecom.mobile@sbm",
+    "telecom.internet@sbm",
+    "telecom.cable@sbm",
+    "telecom.voip@sbm",
+    "telecom.fiber@sbm",
+    "telecom.data@sbm",
+    "telecom.broadband@sbm",
+    "telecom.satellite@sbm",
+    "telecom.wireless@sbm",
+    "telecom.convergence@sbm",
 ];
 exports.MCC_CODE = {
-    "gamming": "5816",
-    "dinning": "5814",
-    "grocery": "5411",
-    "traveler": "4722",
-    "telecom": "4814"
+    gamming: "5816",
+    dinning: "5814",
+    grocery: "5411",
+    traveler: "4722",
+    telecom: "4814",
 };
 //DATE
 // Function to format date to 'DD-MM-YYYY HH:mm:ss' format
 function formatDateToDDMMYYYYHHMMSS(date) {
-    var day = String(date.getDate()).padStart(2, '0');
-    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var day = String(date.getDate()).padStart(2, "0");
+    var month = String(date.getMonth() + 1).padStart(2, "0");
     var year = date.getFullYear();
-    var hours = String(date.getHours()).padStart(2, '0');
-    var minutes = String(date.getMinutes()).padStart(2, '0');
-    var seconds = String(date.getSeconds()).padStart(2, '0');
+    var hours = String(date.getHours()).padStart(2, "0");
+    var minutes = String(date.getMinutes()).padStart(2, "0");
+    var seconds = String(date.getSeconds()).padStart(2, "0");
     return "".concat(day, "-").concat(month, "-").concat(year, " ").concat(hours, ":").concat(minutes, ":").concat(seconds);
 }
+exports.formatDateToDDMMYYYYHHMMSS = formatDateToDDMMYYYYHHMMSS;
 function formatDate(date) {
-    var day = String(date.getDate()).padStart(2, '0');
-    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var day = String(date.getDate()).padStart(2, "0");
+    var month = String(date.getMonth() + 1).padStart(2, "0");
     var year = String(date.getFullYear()).slice(-2);
     return "".concat(month).concat(day).concat(year);
 }
+exports.formatDate = formatDate;
 function formatFullDateWithTimeSWITCH(date) {
-    var day = String(date.getDate()).padStart(2, '0');
-    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var day = String(date.getDate()).padStart(2, "0");
+    var month = String(date.getMonth() + 1).padStart(2, "0");
     var year = date.getFullYear();
-    var hours = String(date.getHours()).padStart(2, '0');
-    var minutes = String(date.getMinutes()).padStart(2, '0');
-    var seconds = String(date.getSeconds()).padStart(2, '0');
+    var hours = String(date.getHours()).padStart(2, "0");
+    var minutes = String(date.getMinutes()).padStart(2, "0");
+    var seconds = String(date.getSeconds()).padStart(2, "0");
     return "".concat(day, "-").concat(month, "-").concat(year, " ").concat(hours, ":").concat(minutes, ":").concat(seconds);
 }
+exports.formatFullDateWithTimeSWITCH = formatFullDateWithTimeSWITCH;
 function formatFullDateWithTimeCBS(date) {
-    var day = String(date.getDate()).padStart(2, '0');
-    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var day = String(date.getDate()).padStart(2, "0");
+    var month = String(date.getMonth() + 1).padStart(2, "0");
     var year = date.getFullYear();
-    var hours = String(date.getHours()).padStart(2, '0');
-    var minutes = String(date.getMinutes()).padStart(2, '0');
-    var seconds = String(date.getSeconds()).padStart(2, '0');
+    var hours = String(date.getHours()).padStart(2, "0");
+    var minutes = String(date.getMinutes()).padStart(2, "0");
+    var seconds = String(date.getSeconds()).padStart(2, "0");
     return "".concat(day, "-").concat(month, "-").concat(year);
 }
+exports.formatFullDateWithTimeCBS = formatFullDateWithTimeCBS;
 // Function to format date to 'YYYYMMDD' for filename
 function formatDateForFilename(date) {
-    var day = String(date.getDate()).padStart(2, '0');
-    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var day = String(date.getDate()).padStart(2, "0");
+    var month = String(date.getMonth() + 1).padStart(2, "0");
     var year = date.getFullYear();
     return "".concat(year).concat(month).concat(day);
 }
+exports.formatDateForFilename = formatDateForFilename;

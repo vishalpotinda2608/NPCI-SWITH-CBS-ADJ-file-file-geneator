@@ -26,13 +26,13 @@ export function* generateNpciData(count: number, date: string,commonData): Itera
             MCC: MCC_CODE[PAYEE_VPA.split('.')[0]],
             PAYEE_VPA: PAYEE_VPA,
             G: 'SMB',
-            H: `SBM${faker.random.numeric(7)}`,
+            H: `SBM${faker.string.numeric(7)}`,
             I: '1',
-            J: `${faker.random.numeric(11)}`,
+            J: `${faker.string.numeric(11)}`,
             K: faker.helpers.arrayElement(beneficiaryTypes),
-            L: `${faker.helpers.arrayElement(beneficiaryTypes)}${faker.random.numeric(7)}`,
+            L: `${faker.helpers.arrayElement(beneficiaryTypes)}${faker.string.numeric(7)}`,
             M: '2',
-            N: `${faker.random.numeric(11)}`
+            N: `${faker.string.numeric(11)}`
         };
     }
 }
