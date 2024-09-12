@@ -27,7 +27,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateSwitchData = generateSwitchData;
+exports.generateSwitchData = void 0;
 var faker_1 = require("@faker-js/faker");
 var constant_1 = require("../Constants/constant");
 // SWITCH
@@ -65,3 +65,4 @@ function generateSwitchData(count, date, commonData) {
         }
     });
 }
+exports.generateSwitchData = generateSwitchData;

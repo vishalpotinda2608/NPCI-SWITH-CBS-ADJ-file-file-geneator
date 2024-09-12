@@ -27,7 +27,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateCbsData = generateCbsData;
+exports.generateCbsData = void 0;
 // CBS
 function generateCbsData(count, date, commonData) {
     var i, _a, TXNID, AMOUNT, RRN, NPCI_CODE;
@@ -64,3 +64,4 @@ function generateCbsData(count, date, commonData) {
         }
     });
 }
+exports.generateCbsData = generateCbsData;
