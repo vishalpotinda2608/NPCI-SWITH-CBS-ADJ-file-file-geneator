@@ -42,12 +42,12 @@ function generateAdjustmentData(count, date, commonData) {
                 if (!(i < count)) return [3 /*break*/, 4];
                 _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, NPCI_CODE = _a.NPCI_CODE;
                 if (!(NPCI_CODE[0] == 'RB' || NPCI_CODE[0] == '0')) return [3 /*break*/, 3];
-                uid = faker_1.faker.random.numeric(10);
+                uid = faker_1.faker.string.numeric(10);
                 adjType = faker_1.faker.helpers.arrayElement(constant_1.adjustmentType);
                 rem = faker_1.faker.helpers.arrayElement(['SBL', constant_1.beneficiaryTypes[Math.floor(Math.random() * 20)], 'SBL']);
                 ben = faker_1.faker.helpers.arrayElement(constant_1.beneficiaryTypes);
                 return [4 /*yield*/, {
-                        "Txnuid": faker_1.faker.random.numeric(10),
+                        "Txnuid": faker_1.faker.string.numeric(10),
                         "Uid": uid,
                         "Adjdate": date,
                         "Adjtype": adjType,
@@ -56,10 +56,10 @@ function generateAdjustmentData(count, date, commonData) {
                         "Response": faker_1.faker.helpers.arrayElement(['0', 'RB', 'RR', 'R9']),
                         "Txndate": date,
                         "Txntime": "".concat(new Date(date).getHours(), ":").concat(new Date(date).getMinutes(), ":").concat(new Date(date).getSeconds()),
-                        "RRN": faker_1.faker.random.numeric(12),
+                        "RRN": faker_1.faker.string.numeric(12),
                         "Terminalid": "159332",
-                        "Ben_Mobile_No": "9".concat(faker_1.faker.random.numeric(12)),
-                        "Rem_Mobile_No": "7".concat(faker_1.faker.random.numeric(12)),
+                        "Ben_Mobile_No": "9".concat(faker_1.faker.string.numeric(12)),
+                        "Rem_Mobile_No": "7".concat(faker_1.faker.string.numeric(12)),
                         "Chbdate": "-",
                         "Chbref": "-",
                         "Txnamount": AMOUNT,
@@ -85,17 +85,17 @@ function generateAdjustmentData(count, date, commonData) {
                         "SHDT77": "",
                         "Transaction_Type": "U2",
                         "Transaction Indicator": faker_1.faker.helpers.arrayElement(['PAY', 'COLLECT', "PAY"]),
-                        "Beneficiary Account number": "90".concat(faker_1.faker.random.numeric(17)),
-                        "Remitter Account number": "93".concat(faker_1.faker.random.numeric(17)),
+                        "Beneficiary Account number": "90".concat(faker_1.faker.string.numeric(17)),
+                        "Remitter Account number": "93".concat(faker_1.faker.string.numeric(17)),
                         "Aadhar Number": "",
-                        "Mobile Number": "93".concat(faker_1.faker.random.numeric(12)),
+                        "Mobile Number": "93".concat(faker_1.faker.string.numeric(12)),
                         "Payer PSP": ben,
                         "Payee PSP": ben,
                         "UPI Transaction ID": TXNID,
                         "Virtual Address": "",
                         "Dispute Flag": faker_1.faker.helpers.arrayElement(['DRC', 'PBRB', 'PR2C', 'TCC', 'RRC']),
                         "Reason Code": faker_1.faker.helpers.arrayElement(['104', '102', '103', '108', '109', '501', 'U008', 'U010']),
-                        "MCC": faker_1.faker.random.numeric(4),
+                        "MCC": faker_1.faker.string.numeric(4),
                         "Originating Channel": faker_1.faker.helpers.arrayElement(['IDIR', 'UMOB']),
                     }];
             case 2:

@@ -210,6 +210,8 @@ export const merchantVPAs=[
     'gamming.robot@sbm',
     'gamming.submarine@sbm',
     'gamming.drone@sbm',
+    'bookerr.npstltdindia@sbm',
+
 
     //Fast Food Restaurants-5814
     'dinning.pizza@sbm',
@@ -222,6 +224,8 @@ export const merchantVPAs=[
     'dinning.steak@sbm',
     'dinning.dessert@sbm',
     'dinning.vegetarian@sbm',
+    'bookerr.npstltdindia@sbm',
+
 
     // Grocery Stores, Supermarkets-5411
     'grocery.freshmart@sbm',
@@ -234,6 +238,8 @@ export const merchantVPAs=[
     'grocery.organic@sbm',
     'grocery.corner@sbm',
     'grocery.town@sbm',
+    'bookerr.npstltdindia@sbm',
+
 
     // Travel Agencies - 4722
     'traveler.explore@sbm',
@@ -246,6 +252,8 @@ export const merchantVPAs=[
     'traveler.tour@sbm',
     'traveler.globetrot@sbm',
     'traveler.expedition@sbm',
+    'bookerr.npstltdindia@sbm',
+
 
     // Telecommunication Services-4814
    'telecom.mobile@sbm',
@@ -257,7 +265,9 @@ export const merchantVPAs=[
     'telecom.broadband@sbm',
     'telecom.satellite@sbm',
     'telecom.wireless@sbm',
-    'telecom.convergence@sbm'
+    'telecom.convergence@sbm',
+    'bookerr.npstltdindia@sbm'
+
 ]
 
 export const MCC_CODE={

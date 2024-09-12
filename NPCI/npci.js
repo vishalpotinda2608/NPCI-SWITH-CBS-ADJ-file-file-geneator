@@ -61,13 +61,13 @@ function generateNpciData(count, date, commonData) {
                         MCC: constant_1.MCC_CODE[PAYEE_VPA.split('.')[0]],
                         PAYEE_VPA: PAYEE_VPA,
                         G: 'SMB',
-                        H: "SBM".concat(faker_1.faker.random.numeric(7)),
+                        H: "SBM".concat(faker_1.faker.string.numeric(7)),
                         I: '1',
-                        J: "".concat(faker_1.faker.random.numeric(11)),
+                        J: "".concat(faker_1.faker.string.numeric(11)),
                         K: faker_1.faker.helpers.arrayElement(constant_1.beneficiaryTypes),
-                        L: "".concat(faker_1.faker.helpers.arrayElement(constant_1.beneficiaryTypes)).concat(faker_1.faker.random.numeric(7)),
+                        L: "".concat(faker_1.faker.helpers.arrayElement(constant_1.beneficiaryTypes)).concat(faker_1.faker.string.numeric(7)),
                         M: '2',
-                        N: "".concat(faker_1.faker.random.numeric(11))
+                        N: "".concat(faker_1.faker.string.numeric(11))
                     }];
             case 2:
                 _b.sent();

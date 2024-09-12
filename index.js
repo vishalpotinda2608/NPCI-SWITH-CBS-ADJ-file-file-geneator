@@ -45,7 +45,7 @@ var switch_1 = require("./SWITCH/switch");
 var cbs_1 = require("./CBS/cbs");
 var constant_1 = require("./Constants/constant");
 var adjustment_1 = require("./ADJUSTMENT/adjustment");
-var ROW_DATA = 900000;
+var ROW_DATA = 50000;
 var ensureDirectoryExists = function (filePath) {
     var directory = path.dirname(filePath);
     if (!fs.existsSync(directory)) {
@@ -118,7 +118,7 @@ var generateCommonData = function (date, count) {
         NPCI_CODE: faker_1.faker.helpers.arrayElement([['00', 'SUCCESS'], ['00', 'SUCCESS'], ['RB', 'DEEMED'], ['Z9', 'FAILURE'], ['00', 'FAILURE'], ['Z7', 'FAILURE'], ['Z7', 'SUCCESS'], ['00', 'SUCCESS'], ['00', 'SUCCESS'],]),
         PAYEE_VPA: faker_1.faker.helpers.arrayElement(constant_1.merchantVPAs),
         PAYER_VPA: "".concat(faker_1.faker.internet.email().split('@')[0]).concat(faker_1.faker.helpers.arrayElement(constant_1.payerVpas)),
-        RRN: faker_1.faker.random.numeric(12)
+        RRN: faker_1.faker.string.numeric(12)
     }); });
 };
 var generateDataForDateRange = function (startDate, numberOfDays, monthName) {
@@ -135,17 +135,17 @@ var generateDataForDateRange = function (startDate, numberOfDays, monthName) {
         // Generate data for the current date
         var commonData = generateCommonData(currentDate, ROW_DATA);
         // Write data to CSV files
-        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/NPCI_DATA/UPIMERCHANTRAWDATAACQSBM").concat(filenameDate, ".csv"), constant_1.npciHeaders, function () { return (0, npci_1.generateNpciData)(ROW_DATA, npciFormattedDate, commonData); });
-        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/SWITCH_DATA/switch_txns_").concat(filenameDate, ".csv"), constant_1.switchHeaders, function () { return (0, switch_1.generateSwitchData)(ROW_DATA, switchFormattedDate, commonData); });
-        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/CBS_DATA/cbs_txns_").concat(filenameDate, ".csv"), constant_1.cbsHeaders, function () { return (0, cbs_1.generateCbsData)(ROW_DATA, formattedDate, commonData); });
-        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/ADJUMENT/ADJUSTMENT").concat(filenameDate, ".csv"), constant_1.adjustHeaders, function () { return (0, adjustment_1.generateAdjustmentData)(ROW_DATA, cbsFormattedDate, commonData); });
+        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/NPCI_DATA/UPIMERCHANTRAWDATAACQSBM").concat(npciFormattedDate, ".csv"), constant_1.npciHeaders, function () { return (0, npci_1.generateNpciData)(ROW_DATA, npciFormattedDate, commonData); });
+        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/SWITCH_DATA/SWITCH").concat(npciFormattedDate, ".csv"), constant_1.switchHeaders, function () { return (0, switch_1.generateSwitchData)(ROW_DATA, switchFormattedDate, commonData); });
+        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/CBS_DATA/CBS").concat(npciFormattedDate, ".csv"), constant_1.cbsHeaders, function () { return (0, cbs_1.generateCbsData)(ROW_DATA, formattedDate, commonData); });
+        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/ADJUMENT/ADJUSTMENT").concat(npciFormattedDate, ".csv"), constant_1.adjustHeaders, function () { return (0, adjustment_1.generateAdjustmentData)(ROW_DATA, cbsFormattedDate, commonData); });
     };
     for (var date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         _loop_1(date);
     }
 };
 // Usage example
-var startDate = new Date(2024, 7, 6); // August 1, 2024
+var startDate = new Date(2024, 6, 30); // 7 - Aug
 var numberOfDays = 1; // Number of days to generate data for
-var monthName = 'AUG';
+var monthName = 'JULY';
 generateDataForDateRange(startDate, numberOfDays, monthName);

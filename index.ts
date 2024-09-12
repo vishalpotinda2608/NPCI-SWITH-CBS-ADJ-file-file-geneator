@@ -61,7 +61,7 @@ const generateCommonData = (date, count) => {
         NPCI_CODE: faker.helpers.arrayElement([['00', 'SUCCESS'], ['00', 'SUCCESS'], ['RB', 'DEEMED'], ['Z9', 'FAILURE'],['00', 'FAILURE'], ['Z7', 'FAILURE'], ['Z7', 'SUCCESS'],['00', 'SUCCESS'], ['00', 'SUCCESS'],]),
         PAYEE_VPA: faker.helpers.arrayElement(merchantVPAs),
         PAYER_VPA: `${faker.internet.email().split('@')[0]}${faker.helpers.arrayElement(payerVpas)}`,
-        RRN: faker.random.numeric(12)
+        RRN: faker.string.numeric(12)
     }));
 };
 
@@ -84,17 +84,17 @@ const generateDataForDateRange = (startDate, numberOfDays,monthName) => {
         const commonData = generateCommonData(currentDate, ROW_DATA);
 
         // Write data to CSV files
-        writeDataToCSV(`${monthName}/${filenameDate}/NPCI_DATA/UPIMERCHANTRAWDATAACQSBM${filenameDate}.csv`, npciHeaders, () => generateNpciData(ROW_DATA, npciFormattedDate, commonData));
-        writeDataToCSV(`${monthName}/${filenameDate}/SWITCH_DATA/switch_txns_${filenameDate}.csv`, switchHeaders, () => generateSwitchData(ROW_DATA, switchFormattedDate, commonData));
-        writeDataToCSV(`${monthName}/${filenameDate}/CBS_DATA/cbs_txns_${filenameDate}.csv`, cbsHeaders, () => generateCbsData(ROW_DATA, formattedDate, commonData));
-        writeDataToCSV(`${monthName}/${filenameDate}/ADJUMENT/ADJUSTMENT${filenameDate}.csv`, adjustHeaders, () => generateAdjustmentData(ROW_DATA, cbsFormattedDate, commonData));
+        writeDataToCSV(`${monthName}/${filenameDate}/NPCI_DATA/UPIMERCHANTRAWDATAACQSBM${npciFormattedDate}.csv`, npciHeaders, () => generateNpciData(ROW_DATA, npciFormattedDate, commonData));
+        writeDataToCSV(`${monthName}/${filenameDate}/SWITCH_DATA/SWITCH${npciFormattedDate}.csv`, switchHeaders, () => generateSwitchData(ROW_DATA, switchFormattedDate, commonData));
+        writeDataToCSV(`${monthName}/${filenameDate}/CBS_DATA/CBS${npciFormattedDate}.csv`, cbsHeaders, () => generateCbsData(ROW_DATA, formattedDate, commonData));
+        writeDataToCSV(`${monthName}/${filenameDate}/ADJUMENT/ADJUSTMENT${npciFormattedDate}.csv`, adjustHeaders, () => generateAdjustmentData(ROW_DATA, cbsFormattedDate, commonData));
     }
 };
 
 // Usage example
-const startDate = new Date(2024, 7, 6); // August 1, 2024
-const numberOfDays = 1; // Number of days to generate data for
-const monthName='AUG'
+const startDate = new Date(2024, 6, 30); // 7 - Aug
+const numberOfDays=1; // Number of days to generate data for
+const monthName='JULY'
 generateDataForDateRange(startDate, numberOfDays,monthName);
 
 
