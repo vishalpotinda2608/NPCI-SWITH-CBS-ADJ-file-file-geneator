@@ -12,13 +12,16 @@ import {
   formatDateForFilename,
   formatDateToDDMMYYYYHHMMSS,
   formatFullDateWithTimeCBS,
+  formatFullDateWithTimeout,
   formatFullDateWithTimeSWITCH,
   merchantVPAs,
   npciHeaders,
   payerVpas,
   switchHeaders,
+  timeoutHeaders,
 } from "./Constants/constant";
 import { generateAdjustmentData } from "./ADJUSTMENT/adjustment";
+import { generateTimeoutData } from "./TIMEOUT/timeout";
 
 const ROW_DATA = 50000;
 
@@ -40,7 +43,7 @@ async function writeDataToCSV(
     path: filename,
     header: headers,
   });
-  const batchSize = 50000;
+  const batchSize = 500000;
   let batch: any[] = [];
   const dataArray = Array.from(dataGenerator());
   for (let record of dataArray) {
@@ -106,6 +109,7 @@ const generateDataForDateRange = (startDate, numberOfDays, monthName) => {
     const npciFormattedDate = formatDate(currentDate);
     const switchFormattedDate = formatFullDateWithTimeSWITCH(currentDate);
     const cbsFormattedDate = formatFullDateWithTimeCBS(currentDate);
+    const cbsFormatteTimeoutFile = formatFullDateWithTimeout(currentDate);
     const filenameDate = formatDateForFilename(currentDate);
 
     // Generate data for the current date
@@ -118,6 +122,7 @@ const generateDataForDateRange = (startDate, numberOfDays, monthName) => {
         writeDataToCSV(`${monthName}/${filenameDate}/SWITCH_DATA/SWITCH${npciFormattedDate}.csv`, switchHeaders, () => generateSwitchData(ROW_DATA, switchFormattedDate, commonData));
         writeDataToCSV(`${monthName}/${filenameDate}/CBS_DATA/CBS${npciFormattedDate}.csv`, cbsHeaders, () => generateCbsData(ROW_DATA, formattedDate, commonData));
         writeDataToCSV(`${monthName}/${filenameDate}/ADJUMENT/ADJUSTMENT${npciFormattedDate}.csv`, adjustHeaders, () => generateAdjustmentData(ROW_DATA, cbsFormattedDate, commonData));
+        writeDataToCSV(`${monthName}/${filenameDate}/TIMEOUT_DATA/UPI Time Out Cases Report_SBL_${cbsFormatteTimeoutFile}.csv`, timeoutHeaders, () => generateTimeoutData(ROW_DATA, cbsFormattedDate, commonData));
     }
 };
 

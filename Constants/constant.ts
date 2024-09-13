@@ -28,6 +28,28 @@ export const npciHeaders = [
   { id: "N", title: "N" },
 ];
 
+export const timeoutHeaders = [
+  { id: "TXN UID", title: "TXN UID" },
+  { id: "TXN Type", title: "TXN Type" },
+  { id: "TXN Date", title: "TXN Date" },
+  { id: "TXN Time", title: "TXN Time" },
+  { id: "Settlement Date", title: "Settlement Date" },
+  { id: "Response Code", title: "Response Code" },
+  { id: "RRN", title: "RRN" },
+  { id: "STAN", title: "STAN" },
+  { id: "Remitter", title: "Remitter" },
+  { id: "Beneficiary", title: "Beneficiary" },
+  {
+    id: "Beneficiary Mobile  /Account/Aadhar Number",
+    title: "Beneficiary Mobile  /Account/Aadhar Number",
+  },
+  { id: "Remitter Number", title: "Remitter Number" },
+  { id: "Amount", title: "Amount" },
+  { id: "UTXNID", title: "UTXNID" },
+  { id: "PayerPSP", title: "PayerPSP" },
+  { id: "PayeePSP", title: "PayeePSP" },
+];
+
 export const switchHeaders = [
   { id: "Date of txn", title: "Date of txn" },
   { id: "Amount", title: "Amount" },
@@ -197,78 +219,79 @@ export function generateRandomTime() {
   const seconds = String(Math.floor(Math.random() * 60)).padStart(2, "0");
   return `${hours}${minutes}${seconds}`;
 }
+export function generateRandomTimeHHMMSS() {
+  const hours = String(Math.floor(Math.random() * 24)).padStart(2, "0");
+  const minutes = String(Math.floor(Math.random() * 60)).padStart(2, "0");
+  const seconds = String(Math.floor(Math.random() * 60)).padStart(2, "0");
+  return `${hours}:${minutes}:${seconds}`;
+}
 
-export const merchantVPAs=[
-    // Digital Goods: Games-5816	
-    'gamming.car@sbm',
-    'gamming.bike@sbm',
-    'gamming.truck@sbm',
-    'gamming.boat@sbm',
-    'gamming.airplane@sbm',
-    'gamming.scooter@sbm',
-    'gamming.helmet@sbm',
-    'gamming.robot@sbm',
-    'gamming.submarine@sbm',
-    'gamming.drone@sbm',
-    'bookerr.npstltdindia@sbm',
+export const merchantVPAs = [
+  // Digital Goods: Games-5816
+  "gamming.car@sbm",
+  "gamming.bike@sbm",
+  "gamming.truck@sbm",
+  "gamming.boat@sbm",
+  "gamming.airplane@sbm",
+  "gamming.scooter@sbm",
+  "gamming.helmet@sbm",
+  "gamming.robot@sbm",
+  "gamming.submarine@sbm",
+  "gamming.drone@sbm",
+  "bookerr.npstltdindia@sbm",
 
+  //Fast Food Restaurants-5814
+  "dinning.pizza@sbm",
+  "dinning.burger@sbm",
+  "dinning.sushi@sbm",
+  "dinning.pasta@sbm",
+  "dinning.tacos@sbm",
+  "dinning.soup@sbm",
+  "dinning.salad@sbm",
+  "dinning.steak@sbm",
+  "dinning.dessert@sbm",
+  "dinning.vegetarian@sbm",
+  "bookerr.npstltdindia@sbm",
 
-    //Fast Food Restaurants-5814
-    'dinning.pizza@sbm',
-    'dinning.burger@sbm',
-    'dinning.sushi@sbm',
-    'dinning.pasta@sbm',
-    'dinning.tacos@sbm',
-    'dinning.soup@sbm',
-    'dinning.salad@sbm',
-    'dinning.steak@sbm',
-    'dinning.dessert@sbm',
-    'dinning.vegetarian@sbm',
-    'bookerr.npstltdindia@sbm',
+  // Grocery Stores, Supermarkets-5411
+  "grocery.freshmart@sbm",
+  "grocery.marketplace@sbm",
+  "grocery.sbmrite@sbm",
+  "grocery.foodland@sbm",
+  "grocery.greenbasket@sbm",
+  "grocery.dailygrocer@sbm",
+  "grocery.bulkstore@sbm",
+  "grocery.organic@sbm",
+  "grocery.corner@sbm",
+  "grocery.town@sbm",
+  "bookerr.npstltdindia@sbm",
 
+  // Travel Agencies - 4722
+  "traveler.explore@sbm",
+  "traveler.wander@sbm",
+  "traveler.adventure@sbm",
+  "traveler.getaway@sbm",
+  "traveler.destinations@sbm",
+  "traveler.escape@sbm",
+  "traveler.vacation@sbm",
+  "traveler.tour@sbm",
+  "traveler.globetrot@sbm",
+  "traveler.expedition@sbm",
+  "bookerr.npstltdindia@sbm",
 
-    // Grocery Stores, Supermarkets-5411
-    'grocery.freshmart@sbm',
-    'grocery.marketplace@sbm',
-    'grocery.sbmrite@sbm',
-    'grocery.foodland@sbm',
-    'grocery.greenbasket@sbm',
-    'grocery.dailygrocer@sbm',
-    'grocery.bulkstore@sbm',
-    'grocery.organic@sbm',
-    'grocery.corner@sbm',
-    'grocery.town@sbm',
-    'bookerr.npstltdindia@sbm',
-
-
-    // Travel Agencies - 4722
-    'traveler.explore@sbm',
-    'traveler.wander@sbm',
-    'traveler.adventure@sbm',
-    'traveler.getaway@sbm',
-    'traveler.destinations@sbm',
-    'traveler.escape@sbm',
-    'traveler.vacation@sbm',
-    'traveler.tour@sbm',
-    'traveler.globetrot@sbm',
-    'traveler.expedition@sbm',
-    'bookerr.npstltdindia@sbm',
-
-
-    // Telecommunication Services-4814
-   'telecom.mobile@sbm',
-    'telecom.internet@sbm',
-    'telecom.cable@sbm',
-    'telecom.voip@sbm',
-    'telecom.fiber@sbm',
-    'telecom.data@sbm',
-    'telecom.broadband@sbm',
-    'telecom.satellite@sbm',
-    'telecom.wireless@sbm',
-    'telecom.convergence@sbm',
-    'bookerr.npstltdindia@sbm'
-
-]
+  // Telecommunication Services-4814
+  "telecom.mobile@sbm",
+  "telecom.internet@sbm",
+  "telecom.cable@sbm",
+  "telecom.voip@sbm",
+  "telecom.fiber@sbm",
+  "telecom.data@sbm",
+  "telecom.broadband@sbm",
+  "telecom.satellite@sbm",
+  "telecom.wireless@sbm",
+  "telecom.convergence@sbm",
+  "bookerr.npstltdindia@sbm",
+];
 
 export const MCC_CODE = {
   gamming: "5816",
@@ -318,6 +341,17 @@ export function formatFullDateWithTimeCBS(date: Date): string {
   const seconds = String(date.getSeconds()).padStart(2, "0");
 
   return `${day}-${month}-${year}`;
+}
+
+export function formatFullDateWithTimeout(date: Date): string {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 }
 
 // Function to format date to 'YYYYMMDD' for filename
