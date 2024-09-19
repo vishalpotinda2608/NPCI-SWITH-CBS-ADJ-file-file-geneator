@@ -127,9 +127,9 @@ const generateDataForDateRange = (startDate, numberOfDays, monthName) => {
 };
 
 // Usage example
-const startDate = new Date(2024, 6, 30); // 7 - Aug
-const numberOfDays=1; // Number of days to generate data for
-const monthName='JULY'
+const startDate = new Date(2024, 8, 3); // 7 - Aug
+const numberOfDays=10; // Number of days to generate data for
+const monthName='SEP'
 generateDataForDateRange(startDate, numberOfDays,monthName);
 
 

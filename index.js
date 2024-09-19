@@ -159,7 +159,7 @@ var generateDataForDateRange = function (startDate, numberOfDays, monthName) {
     }
 };
 // Usage example
-var startDate = new Date(2024, 6, 30); // 7 - Aug
-var numberOfDays = 1; // Number of days to generate data for
-var monthName = 'JULY';
+var startDate = new Date(2024, 8, 3); // 7 - Aug
+var numberOfDays = 10; // Number of days to generate data for
+var monthName = 'SEP';
 generateDataForDateRange(startDate, numberOfDays, monthName);

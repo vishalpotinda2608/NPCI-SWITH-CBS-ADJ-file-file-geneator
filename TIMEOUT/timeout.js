@@ -41,7 +41,7 @@ function generateTimeoutData(count, date, commonData) {
             case 1:
                 if (!(i < count)) return [3 /*break*/, 4];
                 _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, NPCI_CODE = _a.NPCI_CODE, PAYEE_VPA = _a.PAYEE_VPA, PAYER_VPA = _a.PAYER_VPA, RRN = _a.RRN;
-                if (!(NPCI_CODE[0] == 'RB' && i % 5 == 0)) return [3 /*break*/, 3];
+                if (!((NPCI_CODE[0] == 'RB' || NPCI_CODE[0] == 'Z9') && i % 5 == 0)) return [3 /*break*/, 3];
                 return [4 /*yield*/, {
                         "TXN UID": "".concat(faker_1.faker.string.numeric(8)),
                         "TXN Type": "U2",
@@ -55,7 +55,7 @@ function generateTimeoutData(count, date, commonData) {
                         Beneficiary: faker_1.faker.helpers.arrayElement(constant_1.beneficiaryTypes),
                         "Beneficiary Mobile  /Account/Aadhar Number": "".concat(faker_1.faker.string.numeric(19)),
                         "Remitter Number": "".concat(faker_1.faker.string.numeric(19)),
-                        Amount: (AMOUNT * 100).toFixed(0),
+                        Amount: AMOUNT,
                         UTXNID: TXNID,
                         PayerPSP: faker_1.faker.helpers.arrayElement(constant_1.beneficiaryTypes),
                         PayeePSP: faker_1.faker.helpers.arrayElement(constant_1.beneficiaryTypes),
