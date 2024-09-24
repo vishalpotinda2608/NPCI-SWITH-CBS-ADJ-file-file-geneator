@@ -23,7 +23,7 @@ import {
 import { generateAdjustmentData } from "./ADJUSTMENT/adjustment";
 import { generateTimeoutData } from "./TIMEOUT/timeout";
 
-const ROW_DATA = 50000;
+const ROW_DATA = 900000;
 
 const ensureDirectoryExists = (filePath: string) => {
   const directory = path.dirname(filePath);
