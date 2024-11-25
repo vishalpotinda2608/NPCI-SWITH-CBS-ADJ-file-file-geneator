@@ -296,6 +296,7 @@ exports.MCC_CODE = {
     grocery: "5411",
     traveler: "4722",
     telecom: "4814",
+    bookerr: "7883"
 };
 //DATE
 // Function to format date to 'DD-MM-YYYY HH:mm:ss' format

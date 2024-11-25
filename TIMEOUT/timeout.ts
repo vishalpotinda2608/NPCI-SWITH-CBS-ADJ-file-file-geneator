@@ -17,7 +17,7 @@ export function* generateTimeoutData(
   for (let i = 0; i < count; i++) {
     const { TXNID, AMOUNT, NPCI_CODE, PAYEE_VPA, PAYER_VPA, RRN } =
       commonData[i];
-      if((NPCI_CODE[0]=='RB' || NPCI_CODE[0]=='Z9') &&   i%5==0){
+      if((NPCI_CODE[0]=='RB') &&   i%5==0){
         yield {
             "TXN UID": `${faker.string.numeric(8)}`,
             "TXN Type": "U2",

@@ -23,7 +23,7 @@ import {
 import { generateAdjustmentData } from "./ADJUSTMENT/adjustment";
 import { generateTimeoutData } from "./TIMEOUT/timeout";
 
-const ROW_DATA = 900000;
+const ROW_DATA = 1200000;
 
 const ensureDirectoryExists = (filePath: string) => {
   const directory = path.dirname(filePath);
@@ -43,7 +43,7 @@ async function writeDataToCSV(
     path: filename,
     header: headers,
   });
-  const batchSize = 500000;
+  const batchSize = 100000;
   let batch: any[] = [];
   const dataArray = Array.from(dataGenerator());
   for (let record of dataArray) {
@@ -127,10 +127,11 @@ const generateDataForDateRange = (startDate, numberOfDays, monthName) => {
 };
 
 // Usage example
-const startDate = new Date(2024, 6, 1); // 7 - Aug
-const numberOfDays=15; // Number of days to generate data for
-const monthName='JULY'
+const startDate = new Date(2024, 8, 20); // 7 - Aug
+const numberOfDays=1; // Number of days to generate data for
+const monthName='SEP'
 generateDataForDateRange(startDate, numberOfDays,monthName);
+
 
 
 

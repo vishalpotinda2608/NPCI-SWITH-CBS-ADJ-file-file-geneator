@@ -46,7 +46,7 @@ var cbs_1 = require("./CBS/cbs");
 var constant_1 = require("./Constants/constant");
 var adjustment_1 = require("./ADJUSTMENT/adjustment");
 var timeout_1 = require("./TIMEOUT/timeout");
-var ROW_DATA = 50000;
+var ROW_DATA = 1200000;
 var ensureDirectoryExists = function (filePath) {
     var directory = path.dirname(filePath);
     if (!fs.existsSync(directory)) {
@@ -64,7 +64,7 @@ function writeDataToCSV(filename, headers, dataGenerator) {
                         path: filename,
                         header: headers,
                     });
-                    batchSize = 500000;
+                    batchSize = 100000;
                     batch = [];
                     dataArray = Array.from(dataGenerator());
                     _i = 0, dataArray_1 = dataArray;
@@ -159,7 +159,7 @@ var generateDataForDateRange = function (startDate, numberOfDays, monthName) {
     }
 };
 // Usage example
-var startDate = new Date(2024, 7, 16); // 7 - Aug
-var numberOfDays = 16; // Number of days to generate data for
-var monthName = 'AUG';
+var startDate = new Date(2024, 8, 20); // 7 - Aug
+var numberOfDays = 1; // Number of days to generate data for
+var monthName = 'SEP';
 generateDataForDateRange(startDate, numberOfDays, monthName);
