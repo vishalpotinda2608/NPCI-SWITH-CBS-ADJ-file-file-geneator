@@ -23,7 +23,7 @@ import {
 import { generateAdjustmentData } from "./ADJUSTMENT/adjustment";
 import { generateTimeoutData } from "./TIMEOUT/timeout";
 
-const ROW_DATA = 1200000;
+const ROW_DATA = 2000000;
 
 const ensureDirectoryExists = (filePath: string) => {
   const directory = path.dirname(filePath);
@@ -127,9 +127,9 @@ const generateDataForDateRange = (startDate, numberOfDays, monthName) => {
 };
 
 // Usage example
-const startDate = new Date(2024, 8, 20); // 7 - Aug
-const numberOfDays=1; // Number of days to generate data for
-const monthName='SEP'
+const startDate = new Date(2024, 10, 1); // 7 - Aug
+const numberOfDays=15; // Number of days to generate data for
+const monthName='NOV'
 generateDataForDateRange(startDate, numberOfDays,monthName);
 
 

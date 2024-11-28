@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start:ts": "NODE_OPTIONS='--max-old-space-size=6144' ts-node index.ts",
+    "start:js": "NODE_OPTIONS='--max-old-space-size=6144' node index.js"
   },
   "compilerOptions": {
     "target": "es2015",
@@ -18,7 +21,9 @@
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@types/node": "^20.14.14"
+    "@types/node": "^20.14.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
   },
   "dependencies": {
     "csv-writer": "^1.6.0",
