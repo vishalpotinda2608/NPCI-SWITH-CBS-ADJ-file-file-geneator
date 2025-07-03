@@ -30,37 +30,57 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateCbsData = generateCbsData;
 // CBS
 function generateCbsData(count, date, commonData) {
-    var i, _a, TXNID, AMOUNT, RRN, NPCI_CODE;
+    var batchId, batchCount, BATCH_SIZE, batchTotalSum, i, _a, TXNID, AMOUNT, RRN, NPCI_CODE, BATCH_ID;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
+                batchId = "";
+                batchCount = 0;
+                BATCH_SIZE = 10;
+                batchTotalSum = 0;
                 i = 0;
                 _b.label = 1;
             case 1:
-                if (!(i < count)) return [3 /*break*/, 4];
-                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, RRN = _a.RRN, NPCI_CODE = _a.NPCI_CODE;
-                if (!((NPCI_CODE[0] == 'RB' && NPCI_CODE[1] == 'DEEMED') || (NPCI_CODE[0] == '00' && NPCI_CODE[1] == 'SUCCESS'))) return [3 /*break*/, 3];
+                if (!(i < count)) return [3 /*break*/, 5];
+                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, RRN = _a.RRN, NPCI_CODE = _a.NPCI_CODE, BATCH_ID = _a.BATCH_ID;
+                if (i === 0) {
+                    batchId = BATCH_ID;
+                }
+                if (!((NPCI_CODE[0] == "RB" && NPCI_CODE[1] == "DEEMED") ||
+                    (NPCI_CODE[0] == "00" && NPCI_CODE[1] == "SUCCESS"))) return [3 /*break*/, 4];
+                if (!(batchCount === BATCH_SIZE)) return [3 /*break*/, 3];
                 return [4 /*yield*/, {
-                        A: 'S75960940',
+                        A: "S75960940",
                         DATE: date,
-                        AMOUNT: AMOUNT,
+                        AMOUNT: batchTotalSum.toFixed(2).toString(),
                         B: date,
-                        C: '',
-                        D: '2001',
-                        E: '2650',
-                        F: '20012207843065',
-                        G: '27111001182650',
+                        C: "",
+                        D: "2001",
+                        E: "2650",
+                        F: "20012207843065",
+                        G: "27111001182650",
                         RRN: RRN,
                         H: date,
-                        TXNID: TXNID,
+                        TXNID: batchId,
                     }];
             case 2:
                 _b.sent();
                 _b.label = 3;
             case 3:
+                if (batchCount === BATCH_SIZE) {
+                    batchId = BATCH_ID;
+                    batchCount = 0;
+                    batchTotalSum = 0;
+                }
+                else {
+                    batchCount += 1;
+                    batchTotalSum += parseFloat(AMOUNT);
+                }
+                _b.label = 4;
+            case 4:
                 i++;
                 return [3 /*break*/, 1];
-            case 4: return [2 /*return*/];
+            case 5: return [2 /*return*/];
         }
     });
 }

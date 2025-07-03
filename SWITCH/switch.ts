@@ -1,25 +1,60 @@
-import { faker, fakerKA_GE } from '@faker-js/faker';
-import { SWITCH_TXN } from '../Models/SWITCH_TXN.model';
-import { MCC_CODE } from '../Constants/constant';
-
+import { faker, fakerKA_GE } from "@faker-js/faker";
+import { SWITCH_TXN } from "../Models/SWITCH_TXN.model";
+import { MCC_CODE } from "../Constants/constant";
 
 // SWITCH
-export function* generateSwitchData(count: number, date: string,commonData): IterableIterator<SWITCH_TXN> {
-    for (let i = 0; i < count; i++) {
-        const { TXNID, AMOUNT ,NPCI_CODE,PAYEE_VPA,PAYER_VPA,RRN} = commonData[i];
-        yield {
-           'Date of txn': date,
-            Amount: AMOUNT,
-            'Resp Code':faker.helpers.arrayElement(['S96','U09','U30','U31','U67','U78','\N']),
-            'Status':NPCI_CODE[1],
-             RRN:RRN,
-            'Ext id': faker.string.uuid(),
-            'Payee Vpa': PAYEE_VPA,
-            'Txn Note': faker.helpers.arrayElement(['payMerchant','Person','PayMerchant']),
-            'Payer UPI ID': PAYER_VPA,
-            'PayerName': '\N',
-            "Txn Id": TXNID,
-            MCC: MCC_CODE[PAYEE_VPA.split('.')[0]],
-        };
+export function* generateSwitchData(
+  count: number,
+  date: string,
+  commonData
+): IterableIterator<SWITCH_TXN> {
+  let batchId = "";
+  let batchCount = 0;
+  let BATCH_SIZE = 10;
+  for (let i = 0; i < count; i++) {
+    const { TXNID, AMOUNT, NPCI_CODE, PAYEE_VPA, PAYER_VPA, RRN, BATCH_ID } =
+      commonData[i];
+    
+    if(i===0){
+      batchId = BATCH_ID;
     }
+
+    yield {
+      "Date of txn": date,
+      Amount: AMOUNT,
+      "Resp Code": faker.helpers.arrayElement([
+        "S96",
+        "U09",
+        "U30",
+        "U31",
+        "U67",
+        "U78",
+        "N",
+      ]),
+      Status: NPCI_CODE[1],
+      RRN: RRN,
+      "Ext id": faker.string.uuid(),
+      "Payee Vpa": PAYEE_VPA,
+      "Txn Note": faker.helpers.arrayElement([
+        "payMerchant",
+        "Person",
+        "PayMerchant",
+      ]),
+      "Payer UPI ID": PAYER_VPA,
+      PayerName: "N",
+      "Txn Id": TXNID,
+      MCC: MCC_CODE[PAYEE_VPA.split(".")[0]],
+      BATCH_ID: batchId,
+    };
+
+    if (batchCount == BATCH_SIZE) {
+      batchId = BATCH_ID;
+      batchCount = 0;
+    } else {
+      batchCount += 1;
+    }
+  }
+   
+   
+   
 }

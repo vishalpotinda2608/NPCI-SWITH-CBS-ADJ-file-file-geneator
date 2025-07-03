@@ -23,7 +23,7 @@ import {
 import { generateAdjustmentData } from "./ADJUSTMENT/adjustment";
 import { generateTimeoutData } from "./TIMEOUT/timeout";
 
-const ROW_DATA = 2000000;
+const ROW_DATA = 1000000;
 
 const ensureDirectoryExists = (filePath: string) => {
   const directory = path.dirname(filePath);
@@ -43,7 +43,7 @@ async function writeDataToCSV(
     path: filename,
     header: headers,
   });
-  const batchSize = 100000;
+  const batchSize = 10000;
   let batch: any[] = [];
   const dataArray = Array.from(dataGenerator());
   for (let record of dataArray) {
@@ -90,6 +90,7 @@ const generateCommonData = (date, count) => {
       faker.internet.email().split("@")[0]
     }${faker.helpers.arrayElement(payerVpas)}`,
     RRN: faker.string.numeric(12),
+    BATCH_ID:faker.database.mongodbObjectId()
   }));
 };
 
@@ -119,17 +120,17 @@ const generateDataForDateRange = (startDate, numberOfDays, monthName) => {
 
         // Write data to CSV files
         writeDataToCSV(`${monthName}/${filenameDate}/NPCI_DATA/UPIMERCHANTRAWDATAACQSBM${npciFormattedDate}.csv`, npciHeaders, () => generateNpciData(ROW_DATA, npciFormattedDate, commonData));
-        writeDataToCSV(`${monthName}/${filenameDate}/SWITCH_DATA/SWITCH${npciFormattedDate}.csv`, switchHeaders, () => generateSwitchData(ROW_DATA, switchFormattedDate, commonData));
-        writeDataToCSV(`${monthName}/${filenameDate}/CBS_DATA/CBS${npciFormattedDate}.csv`, cbsHeaders, () => generateCbsData(ROW_DATA, formattedDate, commonData));
-        writeDataToCSV(`${monthName}/${filenameDate}/ADJUMENT/ADJUSTMENT${npciFormattedDate}.csv`, adjustHeaders, () => generateAdjustmentData(ROW_DATA, cbsFormattedDate, commonData));
-        writeDataToCSV(`${monthName}/${filenameDate}/TIMEOUT_DATA/UPI Time Out Cases Report_SBL_${cbsFormatteTimeoutFile}.csv`, timeoutHeaders, () => generateTimeoutData(ROW_DATA, cbsFormattedDate, commonData));
+        // writeDataToCSV(`${monthName}/${filenameDate}/SWITCH_DATA/SWITCH${npciFormattedDate}.csv`, switchHeaders, () => generateSwitchData(ROW_DATA, switchFormattedDate, commonData));
+        // writeDataToCSV(`${monthName}/${filenameDate}/CBS_DATA/CBS${npciFormattedDate}.csv`, cbsHeaders, () => generateCbsData(ROW_DATA, formattedDate, commonData));
+        // writeDataToCSV(`${monthName}/${filenameDate}/ADJUMENT/ADJUSTMENT${npciFormattedDate}.csv`, adjustHeaders, () => generateAdjustmentData(ROW_DATA, cbsFormattedDate, commonData));
+        // writeDataToCSV(`${monthName}/${filenameDate}/TIMEOUT_DATA/UPI Time Out Cases Report_SBL_${cbsFormatteTimeoutFile}.csv`, timeoutHeaders, () => generateTimeoutData(ROW_DATA, cbsFormattedDate, commonData));
     }
 };
 
 // Usage example
-const startDate = new Date(2024, 10, 1); // 7 - Aug
-const numberOfDays=15; // Number of days to generate data for
-const monthName='NOV'
+const startDate = new Date(2025, 4, 3); // 7 - Aug
+const numberOfDays=1; // Number of days to generate data for
+const monthName='MAY'
 generateDataForDateRange(startDate, numberOfDays,monthName);
 
 
