@@ -1,7 +1,7 @@
 "use strict";
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -28,12 +28,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateCbsData = generateCbsData;
+var faker_1 = require("@faker-js/faker");
+var constant_1 = require("../Constants/constant");
+function generateTranId() {
+    return "S".concat(faker_1.faker.string.numeric(8));
+}
+function formatCbsAmount(amount) {
+    return parseFloat(amount).toFixed(4);
+}
 // CBS
 function generateCbsData(count, date, commonData) {
-    var i, _a, TXNID, AMOUNT, RRN, NPCI_CODE;
+    var tranDate, i, _a, TXNID, AMOUNT, RRN, NPCI_CODE;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
+                tranDate = (0, constant_1.formatCbsTranDate)(date);
                 i = 0;
                 _b.label = 1;
             case 1:
@@ -41,18 +50,16 @@ function generateCbsData(count, date, commonData) {
                 _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, RRN = _a.RRN, NPCI_CODE = _a.NPCI_CODE;
                 if (!((NPCI_CODE[0] == 'RB' && NPCI_CODE[1] == 'DEEMED') || (NPCI_CODE[0] == '00' && NPCI_CODE[1] == 'SUCCESS'))) return [3 /*break*/, 3];
                 return [4 /*yield*/, {
-                        A: 'S75960940',
-                        DATE: date,
-                        AMOUNT: AMOUNT,
-                        B: date,
-                        C: '',
-                        D: '2001',
-                        E: '2650',
-                        F: '20012207843065',
-                        G: '27111001182650',
+                        TRAN_ID: generateTranId(),
+                        TRAN_DATE: tranDate,
+                        TRAN_AMT: formatCbsAmount(AMOUNT),
+                        VALUE_DATE: tranDate,
+                        CR_SOL_ID: constant_1.CBS_SOL_ID,
+                        DR_SOL_ID: constant_1.CBS_SOL_ID,
+                        CR_ACCT_NO: constant_1.CBS_CR_ACCT_NO,
+                        DR_ACCT_NO: constant_1.CBS_DR_ACCT_NO,
                         RRN: RRN,
-                        H: date,
-                        TXNID: TXNID,
+                        UPI_TXN_ID: TXNID,
                     }];
             case 2:
                 _b.sent();

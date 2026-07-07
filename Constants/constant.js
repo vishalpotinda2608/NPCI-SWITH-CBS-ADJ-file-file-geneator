@@ -1,10 +1,32 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MCC_CODE = exports.merchantVPAs = exports.payerVpas = exports.beneficiaryTypes = exports.adjustmentType = exports.adjustHeaders = exports.cbsHeaders = exports.switchHeaders = exports.timeoutHeaders = exports.npciHeaders = void 0;
+exports.NPCI_FILE_CONFIG = exports.MCC_CODE = exports.merchantVPAs = exports.merchantCredentials = exports.AUTH_CYCLES = exports.DISPUTE_CYCLE_WINDOWS = exports.AUTH_CYCLE_WINDOWS = exports.payerVpas = exports.beneficiaryTypes = exports.adjustmentType = exports.adjustHeaders = exports.CBS_DR_ACCT_NO = exports.CBS_CR_ACCT_NO = exports.CBS_SOL_ID = exports.cbsHeaders = exports.switchHeaders = exports.timeoutHeaders = exports.npciHeaders = void 0;
+exports.generateTimeInCycle = generateTimeInCycle;
+exports.formatNpciTimeToColon = formatNpciTimeToColon;
 exports.generateRandomTime = generateRandomTime;
 exports.generateRandomTimeHHMMSS = generateRandomTimeHHMMSS;
+exports.setMerchantCredentials = setMerchantCredentials;
+exports.setMerchantVPAs = setMerchantVPAs;
+exports.formatCbsTranDate = formatCbsTranDate;
 exports.formatDateToDDMMYYYYHHMMSS = formatDateToDDMMYYYYHHMMSS;
 exports.formatDate = formatDate;
+exports.formatDateDDMMYY = formatDateDDMMYY;
+exports.buildNpciFilename = buildNpciFilename;
+exports.buildSwitchFilename = buildSwitchFilename;
+exports.buildCbsFilename = buildCbsFilename;
+exports.buildAdjustmentFilename = buildAdjustmentFilename;
+exports.formatSwitchDateFromNpciTime = formatSwitchDateFromNpciTime;
 exports.formatFullDateWithTimeSWITCH = formatFullDateWithTimeSWITCH;
 exports.formatFullDateWithTimeCBS = formatFullDateWithTimeCBS;
 exports.formatFullDateWithTimeout = formatFullDateWithTimeout;
@@ -74,19 +96,20 @@ exports.switchHeaders = [
     { id: "MCC", title: "MCC" },
 ];
 exports.cbsHeaders = [
-    { id: "A", title: "A" },
-    { id: "DATE", title: "DATE" },
-    { id: "AMOUNT", title: "AMOUNT" },
-    { id: "B", title: "B" },
-    { id: "C", title: "C" },
-    { id: "D", title: "D" },
-    { id: "E", title: "E" },
-    { id: "F", title: "F" },
-    { id: "G", title: "G" },
+    { id: "TRAN_ID", title: "TRAN_ID" },
+    { id: "TRAN_DATE", title: "TRAN_DATE" },
+    { id: "TRAN_AMT", title: "TRAN_AMT" },
+    { id: "VALUE_DATE", title: "VALUE_DATE" },
+    { id: "CR_SOL_ID", title: "CR_SOL_ID" },
+    { id: "DR_SOL_ID", title: "DR_SOL_ID" },
+    { id: "CR_ACCT_NO", title: "CR_ACCT_NO" },
+    { id: "DR_ACCT_NO", title: "DR_ACCT_NO" },
     { id: "RRN", title: "RRN" },
-    { id: "H", title: "H" },
-    { id: "TXNID", title: "TXNID" },
+    { id: "UPI_TXN_ID", title: "UPI_TXN_ID" },
 ];
+exports.CBS_SOL_ID = "2650";
+exports.CBS_CR_ACCT_NO = "27220001182650";
+exports.CBS_DR_ACCT_NO = "19025003182650";
 exports.adjustHeaders = [
     { id: "Txnuid", title: "Txnuid" },
     { id: "Uid", title: "Uid" },
@@ -216,6 +239,44 @@ exports.payerVpas = [
     "@timecosmos",
     "@paytm",
 ];
+/** NPCI OC 222 — AUTH settlement windows (Annexure I). */
+exports.AUTH_CYCLE_WINDOWS = {
+    1: { startHour: 21, endHour: 0 },
+    2: { startHour: 0, endHour: 5 },
+    3: { startHour: 5, endHour: 7 },
+    4: { startHour: 7, endHour: 9 },
+    5: { startHour: 9, endHour: 11 },
+    6: { startHour: 11, endHour: 13 },
+    7: { startHour: 13, endHour: 15 },
+    8: { startHour: 15, endHour: 17 },
+    9: { startHour: 17, endHour: 19 },
+    10: { startHour: 19, endHour: 21 },
+};
+/** NPCI OC 222 — Dispute settlement windows DC1 / DC2. */
+exports.DISPUTE_CYCLE_WINDOWS = {
+    1: { startHour: 0, endHour: 16 },
+    2: { startHour: 16, endHour: 0 },
+};
+exports.AUTH_CYCLES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+/** Random HHMMSS inside a settlement-cycle window. */
+function generateTimeInCycle(_baseDate, window) {
+    var startMins = window.startHour * 60;
+    var endMins = window.endHour * 60;
+    var span = endMins > startMins
+        ? endMins - startMins
+        : 24 * 60 - startMins + endMins;
+    var offset = Math.floor(Math.random() * span);
+    var totalMins = startMins + offset;
+    if (totalMins >= 24 * 60)
+        totalMins -= 24 * 60;
+    var h = Math.floor(totalMins / 60);
+    var m = totalMins % 60;
+    var s = Math.floor(Math.random() * 60);
+    return "".concat(String(h).padStart(2, "0")).concat(String(m).padStart(2, "0")).concat(String(s).padStart(2, "0"));
+}
+function formatNpciTimeToColon(timeHHMMSS) {
+    return "".concat(timeHHMMSS.slice(0, 2), ":").concat(timeHHMMSS.slice(2, 4), ":").concat(timeHHMMSS.slice(4, 6));
+}
 function generateRandomTime() {
     var hours = String(Math.floor(Math.random() * 24)).padStart(2, "0");
     var minutes = String(Math.floor(Math.random() * 60)).padStart(2, "0");
@@ -228,68 +289,20 @@ function generateRandomTimeHHMMSS() {
     var seconds = String(Math.floor(Math.random() * 60)).padStart(2, "0");
     return "".concat(hours, ":").concat(minutes, ":").concat(seconds);
 }
-exports.merchantVPAs = [
-    // Digital Goods: Games-5816
-    "gamming.car@sbm",
-    "gamming.bike@sbm",
-    "gamming.truck@sbm",
-    "gamming.boat@sbm",
-    "gamming.airplane@sbm",
-    "gamming.scooter@sbm",
-    "gamming.helmet@sbm",
-    "gamming.robot@sbm",
-    "gamming.submarine@sbm",
-    "gamming.drone@sbm",
-    "bookerr.npstltdindia@sbm",
-    //Fast Food Restaurants-5814
-    "dinning.pizza@sbm",
-    "dinning.burger@sbm",
-    "dinning.sushi@sbm",
-    "dinning.pasta@sbm",
-    "dinning.tacos@sbm",
-    "dinning.soup@sbm",
-    "dinning.salad@sbm",
-    "dinning.steak@sbm",
-    "dinning.dessert@sbm",
-    "dinning.vegetarian@sbm",
-    "bookerr.npstltdindia@sbm",
-    // Grocery Stores, Supermarkets-5411
-    "grocery.freshmart@sbm",
-    "grocery.marketplace@sbm",
-    "grocery.sbmrite@sbm",
-    "grocery.foodland@sbm",
-    "grocery.greenbasket@sbm",
-    "grocery.dailygrocer@sbm",
-    "grocery.bulkstore@sbm",
-    "grocery.organic@sbm",
-    "grocery.corner@sbm",
-    "grocery.town@sbm",
-    "bookerr.npstltdindia@sbm",
-    // Travel Agencies - 4722
-    "traveler.explore@sbm",
-    "traveler.wander@sbm",
-    "traveler.adventure@sbm",
-    "traveler.getaway@sbm",
-    "traveler.destinations@sbm",
-    "traveler.escape@sbm",
-    "traveler.vacation@sbm",
-    "traveler.tour@sbm",
-    "traveler.globetrot@sbm",
-    "traveler.expedition@sbm",
-    "bookerr.npstltdindia@sbm",
-    // Telecommunication Services-4814
-    "telecom.mobile@sbm",
-    "telecom.internet@sbm",
-    "telecom.cable@sbm",
-    "telecom.voip@sbm",
-    "telecom.fiber@sbm",
-    "telecom.data@sbm",
-    "telecom.broadband@sbm",
-    "telecom.satellite@sbm",
-    "telecom.wireless@sbm",
-    "telecom.convergence@sbm",
-    "bookerr.npstltdindia@sbm",
-];
+/** Populated at startup from ClickHouse `entity_credentials_uat`. */
+exports.merchantCredentials = [];
+/** VPA list derived from `merchantCredentials` for random selection. */
+exports.merchantVPAs = [];
+function setMerchantCredentials(credentials) {
+    exports.merchantCredentials.length = 0;
+    exports.merchantCredentials.push.apply(exports.merchantCredentials, credentials);
+    exports.merchantVPAs.length = 0;
+    exports.merchantVPAs.push.apply(exports.merchantVPAs, credentials.map(function (row) { return row.vpa; }));
+}
+function setMerchantVPAs(vpas) {
+    exports.merchantVPAs.length = 0;
+    exports.merchantVPAs.push.apply(exports.merchantVPAs, vpas);
+}
 exports.MCC_CODE = {
     gamming: "5816",
     dinning: "5814",
@@ -299,6 +312,13 @@ exports.MCC_CODE = {
     bookerr: "7883"
 };
 //DATE
+/** yyyy-MM-dd HH:mm:ss — CBS TRAN_DATE / VALUE_DATE. */
+function formatCbsTranDate(date) {
+    var day = String(date.getDate()).padStart(2, "0");
+    var month = String(date.getMonth() + 1).padStart(2, "0");
+    var year = date.getFullYear();
+    return "".concat(year, "-").concat(month, "-").concat(day, " 00:00:00");
+}
 // Function to format date to 'DD-MM-YYYY HH:mm:ss' format
 function formatDateToDDMMYYYYHHMMSS(date) {
     var day = String(date.getDate()).padStart(2, "0");
@@ -314,6 +334,55 @@ function formatDate(date) {
     var month = String(date.getMonth() + 1).padStart(2, "0");
     var year = String(date.getFullYear()).slice(-2);
     return "".concat(month).concat(day).concat(year);
+}
+/** DDMMYY — used in NPCI / CBS / SWITCH upload filenames. */
+function formatDateDDMMYY(date) {
+    var day = String(date.getDate()).padStart(2, "0");
+    var month = String(date.getMonth() + 1).padStart(2, "0");
+    var year = String(date.getFullYear()).slice(-2);
+    return "".concat(day).concat(month).concat(year);
+}
+exports.NPCI_FILE_CONFIG = {
+    side: "ISS",
+    bank: "SBF",
+    cycle: 3,
+};
+/** UPIMERCHANTRAWDATA(ISS|ACQ)<BANK>(DDMMYY)_<CYCLE>C.csv */
+function buildNpciFilename(date, options) {
+    if (options === void 0) { options = {}; }
+    var _a = __assign(__assign({}, exports.NPCI_FILE_CONFIG), options), side = _a.side, bank = _a.bank, cycle = _a.cycle;
+    return "UPIMERCHANTRAWDATA".concat(side).concat(bank).concat(formatDateDDMMYY(date), "_").concat(cycle, "C.csv");
+}
+/** Switch_File(DDMMYY).csv */
+function buildSwitchFilename(date) {
+    return "Switch_File".concat(formatDateDDMMYY(date), ".csv");
+}
+/** UPI_Cbs(DDMMYY).csv */
+function buildCbsFilename(date) {
+    return "UPI_Cbs".concat(formatDateDDMMYY(date), ".csv");
+}
+var ADJUSTMENT_MONTHS = [
+    "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+    "JUL", "AUG", "SEP", "OCT", "NOV", "DEC",
+];
+/** UPI Adjustment Report_<BANK>_<DDMONYYYY>_DC<n>.csv */
+function buildAdjustmentFilename(date, disputeCycle) {
+    var day = String(date.getDate()).padStart(2, "0");
+    var mon = ADJUSTMENT_MONTHS[date.getMonth()];
+    var year = date.getFullYear();
+    return "UPI Adjustment Report_".concat(exports.NPCI_FILE_CONFIG.bank, "_").concat(day).concat(mon).concat(year, "_DC").concat(disputeCycle, ".csv");
+}
+/** DD-MM-YYYY HH:mm:ss for SWITCH from NPCI TIME (HHMMSS) on baseDate. */
+function formatSwitchDateFromNpciTime(baseDate, timeHHMMSS) {
+    var txnDate = new Date(baseDate);
+    txnDate.setHours(Number(timeHHMMSS.slice(0, 2)), Number(timeHHMMSS.slice(2, 4)), Number(timeHHMMSS.slice(4, 6)));
+    var day = String(txnDate.getDate()).padStart(2, "0");
+    var month = String(txnDate.getMonth() + 1).padStart(2, "0");
+    var year = txnDate.getFullYear();
+    var hours = String(txnDate.getHours()).padStart(2, "0");
+    var minutes = String(txnDate.getMinutes()).padStart(2, "0");
+    var seconds = String(txnDate.getSeconds()).padStart(2, "0");
+    return "".concat(day, "-").concat(month, "-").concat(year, " ").concat(hours, ":").concat(minutes, ":").concat(seconds);
 }
 function formatFullDateWithTimeSWITCH(date) {
     var day = String(date.getDate()).padStart(2, "0");

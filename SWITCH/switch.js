@@ -1,7 +1,7 @@
 "use strict";
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -30,9 +30,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateSwitchData = generateSwitchData;
 var faker_1 = require("@faker-js/faker");
 var constant_1 = require("../Constants/constant");
+var SWITCH_NULL = "\\N";
+var SWITCH_AMOUNTS = [
+    100, 500, 600, 700, 800, 960, 1000, 1123, 1500, 2000,
+];
+var FAILURE_RESP_CODES = ["U30", "U09", "U31", "U67", "U78"];
+function hexId(length) {
+    return faker_1.faker.string.hexadecimal({ length: length, casing: "lower" }).replace("0x", "");
+}
+function generateSwitchPayerUpiId() {
+    var handle = faker_1.faker.helpers.arrayElement(constant_1.payerVpas);
+    var phone = faker_1.faker.string.numeric(10);
+    var suffix = Math.random() > 0.75
+        ? "-".concat(faker_1.faker.number.int({ min: 1, max: 9 }))
+        : "";
+    return "".concat(phone).concat(suffix).concat(handle);
+}
+function switchRespCode(status) {
+    if (status === "FAILURE") {
+        return faker_1.faker.helpers.arrayElement(FAILURE_RESP_CODES);
+    }
+    return SWITCH_NULL;
+}
+function formatSwitchAmount() {
+    return faker_1.faker.helpers.arrayElement(SWITCH_AMOUNTS).toFixed(2);
+}
 // SWITCH
-function generateSwitchData(count, date, commonData) {
-    var i, _a, TXNID, AMOUNT, NPCI_CODE, PAYEE_VPA, PAYER_VPA, RRN;
+function generateSwitchData(count, baseDate, commonData) {
+    var i, _a, TXNID, NPCI_CODE, PAYEE_VPA, RRN, MCC, TIME, status_1, payerUpiId;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -40,20 +65,24 @@ function generateSwitchData(count, date, commonData) {
                 _b.label = 1;
             case 1:
                 if (!(i < count)) return [3 /*break*/, 4];
-                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, NPCI_CODE = _a.NPCI_CODE, PAYEE_VPA = _a.PAYEE_VPA, PAYER_VPA = _a.PAYER_VPA, RRN = _a.RRN;
+                _a = commonData[i], TXNID = _a.TXNID, NPCI_CODE = _a.NPCI_CODE, PAYEE_VPA = _a.PAYEE_VPA, RRN = _a.RRN, MCC = _a.MCC, TIME = _a.TIME;
+                status_1 = NPCI_CODE[1];
+                payerUpiId = generateSwitchPayerUpiId();
                 return [4 /*yield*/, {
-                        'Date of txn': date,
-                        Amount: AMOUNT,
-                        'Resp Code': faker_1.faker.helpers.arrayElement(['S96', 'U09', 'U30', 'U31', 'U67', 'U78', '\N']),
-                        'Status': NPCI_CODE[1],
+                        "Date of txn": TIME
+                            ? (0, constant_1.formatSwitchDateFromNpciTime)(baseDate, TIME)
+                            : (0, constant_1.formatSwitchDateFromNpciTime)(baseDate, "103000"),
+                        Amount: formatSwitchAmount(),
+                        "Resp Code": switchRespCode(status_1),
+                        Status: status_1,
                         RRN: RRN,
-                        'Ext id': faker_1.faker.string.uuid(),
-                        'Payee Vpa': PAYEE_VPA,
-                        'Txn Note': faker_1.faker.helpers.arrayElement(['payMerchant', 'Person', 'PayMerchant']),
-                        'Payer UPI ID': PAYER_VPA,
-                        'PayerName': '\N',
+                        "Ext id": hexId(32),
+                        "Payee Vpa": PAYEE_VPA,
+                        "Txn Note": "payment",
+                        "Payer UPI ID": payerUpiId,
+                        PayerName: SWITCH_NULL,
                         "Txn Id": TXNID,
-                        MCC: constant_1.MCC_CODE[PAYEE_VPA.split('.')[0]],
+                        MCC: MCC,
                     }];
             case 2:
                 _b.sent();

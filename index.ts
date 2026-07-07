@@ -7,23 +7,37 @@ import { generateSwitchData } from "./SWITCH/switch";
 import { generateCbsData } from "./CBS/cbs";
 import {
   adjustHeaders,
+  AUTH_CYCLES,
+  AUTH_CYCLE_WINDOWS,
+  AuthCycle,
+  buildAdjustmentFilename,
+  buildCbsFilename,
+  buildNpciFilename,
+  buildSwitchFilename,
   cbsHeaders,
+  CycleWindow,
+  DISPUTE_CYCLE_WINDOWS,
+  DisputeCycle,
   formatDate,
   formatDateForFilename,
-  formatDateToDDMMYYYYHHMMSS,
   formatFullDateWithTimeCBS,
   formatFullDateWithTimeout,
-  formatFullDateWithTimeSWITCH,
-  merchantVPAs,
+  generateTimeInCycle,
+  merchantCredentials,
   npciHeaders,
   payerVpas,
+  setMerchantCredentials,
   switchHeaders,
   timeoutHeaders,
 } from "./Constants/constant";
 import { generateAdjustmentData } from "./ADJUSTMENT/adjustment";
 import { generateTimeoutData } from "./TIMEOUT/timeout";
+import {
+  closeClickhouseClient,
+  fetchMerchantCredentials,
+} from "./db/clickhouse";
 
-const ROW_DATA = 2000000;
+const ROW_DATA = 5000;
 
 const ensureDirectoryExists = (filePath: string) => {
   const directory = path.dirname(filePath);
@@ -69,28 +83,38 @@ async function writeDataToCSV(
   }
 }
 
-// Generate common TXNID and AMOUNT once and reuse
-const generateCommonData = (date, count) => {
-  return Array.from({ length: count }, () => ({
-    TXNID: faker.database.mongodbObjectId(),
-    AMOUNT: faker.finance.amount(),
-    NPCI_CODE: faker.helpers.arrayElement([
-      ["00", "SUCCESS"],
-      ["00", "SUCCESS"],
-      ["RB", "DEEMED"],
-      ["Z9", "FAILURE"],
-      ["00", "FAILURE"],
-      ["Z7", "FAILURE"],
-      ["Z7", "SUCCESS"],
-      ["00", "SUCCESS"],
-      ["00", "SUCCESS"],
-    ]),
-    PAYEE_VPA: faker.helpers.arrayElement(merchantVPAs),
-    PAYER_VPA: `${
-      faker.internet.email().split("@")[0]
-    }${faker.helpers.arrayElement(payerVpas)}`,
-    RRN: faker.string.numeric(12),
-  }));
+const generateCommonData = (
+  date: Date,
+  count: number,
+  cycleWindow?: CycleWindow
+) => {
+  return Array.from({ length: count }, () => {
+    const merchant = faker.helpers.arrayElement(merchantCredentials);
+    return {
+      TXNID: faker.database.mongodbObjectId(),
+      AMOUNT: faker.finance.amount(),
+      NPCI_CODE: faker.helpers.arrayElement([
+        ["00", "SUCCESS"],
+        ["00", "SUCCESS"],
+        ["RB", "DEEMED"],
+        ["Z9", "FAILURE"],
+        ["00", "FAILURE"],
+        ["Z7", "FAILURE"],
+        ["Z7", "SUCCESS"],
+        ["00", "SUCCESS"],
+        ["00", "SUCCESS"],
+      ]),
+      PAYEE_VPA: merchant.vpa,
+      MCC: merchant.mcc,
+      PAYER_VPA: `${
+        faker.internet.email().split("@")[0]
+      }${faker.helpers.arrayElement(payerVpas)}`,
+      RRN: faker.string.numeric(12),
+      TIME: cycleWindow
+        ? generateTimeInCycle(date, cycleWindow)
+        : generateTimeInCycle(date, AUTH_CYCLE_WINDOWS[5]),
+    };
+  });
 };
 
 const generateDataForDateRange = (startDate, numberOfDays, monthName) => {
@@ -105,32 +129,97 @@ const generateDataForDateRange = (startDate, numberOfDays, monthName) => {
     const currentDate = new Date(date); // Clone the current date
 
     // Format dates for each file
-    const formattedDate = formatDateToDDMMYYYYHHMMSS(currentDate);
     const npciFormattedDate = formatDate(currentDate);
-    const switchFormattedDate = formatFullDateWithTimeSWITCH(currentDate);
     const cbsFormattedDate = formatFullDateWithTimeCBS(currentDate);
     const cbsFormatteTimeoutFile = formatFullDateWithTimeout(currentDate);
     const filenameDate = formatDateForFilename(currentDate);
 
-    // Generate data for the current date
+    const allCycleCommonData: ReturnType<typeof generateCommonData> = [];
 
-        // Generate data for the current date
-        const commonData = generateCommonData(currentDate, ROW_DATA);
+    for (const cycle of AUTH_CYCLES) {
+      const cycleCommonData = generateCommonData(
+        currentDate,
+        ROW_DATA,
+        AUTH_CYCLE_WINDOWS[cycle as AuthCycle]
+      );
+      allCycleCommonData.push(...cycleCommonData);
 
-        // Write data to CSV files
-        writeDataToCSV(`${monthName}/${filenameDate}/NPCI_DATA/UPIMERCHANTRAWDATAACQSBM${npciFormattedDate}.csv`, npciHeaders, () => generateNpciData(ROW_DATA, npciFormattedDate, commonData));
-        writeDataToCSV(`${monthName}/${filenameDate}/SWITCH_DATA/SWITCH${npciFormattedDate}.csv`, switchHeaders, () => generateSwitchData(ROW_DATA, switchFormattedDate, commonData));
-        writeDataToCSV(`${monthName}/${filenameDate}/CBS_DATA/CBS${npciFormattedDate}.csv`, cbsHeaders, () => generateCbsData(ROW_DATA, formattedDate, commonData));
-        writeDataToCSV(`${monthName}/${filenameDate}/ADJUMENT/ADJUSTMENT${npciFormattedDate}.csv`, adjustHeaders, () => generateAdjustmentData(ROW_DATA, cbsFormattedDate, commonData));
-        writeDataToCSV(`${monthName}/${filenameDate}/TIMEOUT_DATA/UPI Time Out Cases Report_SBL_${cbsFormatteTimeoutFile}.csv`, timeoutHeaders, () => generateTimeoutData(ROW_DATA, cbsFormattedDate, commonData));
+      writeDataToCSV(
+        `${monthName}/${filenameDate}/NPCI_DATA/${buildNpciFilename(currentDate, { cycle })}`,
+        npciHeaders,
+        () => generateNpciData(ROW_DATA, npciFormattedDate, cycleCommonData)
+      );
     }
+
+    writeDataToCSV(
+      `${monthName}/${filenameDate}/SWITCH_DATA/${buildSwitchFilename(currentDate)}`,
+      switchHeaders,
+      () =>
+        generateSwitchData(
+          allCycleCommonData.length,
+          currentDate,
+          allCycleCommonData
+        )
+    );
+    writeDataToCSV(
+      `${monthName}/${filenameDate}/CBS_DATA/${buildCbsFilename(currentDate)}`,
+      cbsHeaders,
+      () =>
+        generateCbsData(
+          allCycleCommonData.length,
+          currentDate,
+          allCycleCommonData
+        )
+    );
+
+    for (const dc of [1, 2] as DisputeCycle[]) {
+      const disputeCommonData = generateCommonData(
+        currentDate,
+        ROW_DATA,
+        DISPUTE_CYCLE_WINDOWS[dc]
+      );
+      writeDataToCSV(
+        `${monthName}/${filenameDate}/ADJUSTMENT/${buildAdjustmentFilename(currentDate, dc)}`,
+        adjustHeaders,
+        () =>
+          generateAdjustmentData(
+            ROW_DATA,
+            cbsFormattedDate,
+            disputeCommonData
+          )
+      );
+    }
+
+    writeDataToCSV(
+      `${monthName}/${filenameDate}/TIMEOUT_DATA/UPI Time Out Cases Report_SBL_${cbsFormatteTimeoutFile}.csv`,
+      timeoutHeaders,
+      () => generateTimeoutData(ROW_DATA, cbsFormattedDate, allCycleCommonData)
+    );
+  }
 };
 
-// Usage example
-const startDate = new Date(2024, 10, 1); // 7 - Aug
-const numberOfDays=15; // Number of days to generate data for
-const monthName='NOV'
-generateDataForDateRange(startDate, numberOfDays,monthName);
+async function main() {
+  const merchants = await fetchMerchantCredentials();
+  if (merchants.length === 0) {
+    throw new Error(
+      "No merchant VPAs found in entity_credentials_uat. Check ClickHouse connection and table data."
+    );
+  }
+  setMerchantCredentials(merchants);
+  console.log(`Loaded ${merchants.length} merchant VPAs from ClickHouse`);
+
+  const startDate = new Date(2026, 5, 5); // 7 - Jun
+  const numberOfDays = 1;
+  const monthName = "JUNE";
+  generateDataForDateRange(startDate, numberOfDays, monthName);
+}
+
+main()
+  .catch((error) => {
+    console.error("Failed to generate fake data:", error);
+    process.exitCode = 1;
+  })
+  .finally(() => closeClickhouseClient());
 
 
 

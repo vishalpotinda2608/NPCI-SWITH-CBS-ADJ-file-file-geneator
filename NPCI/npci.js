@@ -1,7 +1,7 @@
 "use strict";
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -32,7 +32,7 @@ var faker_1 = require("@faker-js/faker");
 var constant_1 = require("../Constants/constant");
 //NPCI
 function generateNpciData(count, date, commonData) {
-    var i, _a, TXNID, AMOUNT, NPCI_CODE, PAYEE_VPA, PAYER_VPA, RRN;
+    var i, _a, TXNID, AMOUNT, NPCI_CODE, PAYEE_VPA, PAYER_VPA, RRN, MCC, TIME;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -40,7 +40,7 @@ function generateNpciData(count, date, commonData) {
                 _b.label = 1;
             case 1:
                 if (!(i < count)) return [3 /*break*/, 4];
-                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, NPCI_CODE = _a.NPCI_CODE, PAYEE_VPA = _a.PAYEE_VPA, PAYER_VPA = _a.PAYER_VPA, RRN = _a.RRN;
+                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, NPCI_CODE = _a.NPCI_CODE, PAYEE_VPA = _a.PAYEE_VPA, PAYER_VPA = _a.PAYER_VPA, RRN = _a.RRN, MCC = _a.MCC, TIME = _a.TIME;
                 return [4 /*yield*/, {
                         NPCI_TXN_TYPE: 'TX',
                         NPCI_STATUS: 'U2',
@@ -48,7 +48,7 @@ function generateNpciData(count, date, commonData) {
                         RRN: RRN,
                         NPCI_CODE: NPCI_CODE[0],
                         DATE: date,
-                        TIME: (0, constant_1.generateRandomTime)(),
+                        TIME: TIME !== null && TIME !== void 0 ? TIME : (0, constant_1.generateRandomTime)(),
                         AMOUNT: (AMOUNT * 100).toFixed(0),
                         A: '',
                         B: '1',
@@ -58,7 +58,7 @@ function generateNpciData(count, date, commonData) {
                         E: '0',
                         PAYER_VPA: PAYER_VPA,
                         F: faker_1.faker.helpers.arrayElement(constant_1.beneficiaryTypes),
-                        MCC: constant_1.MCC_CODE[PAYEE_VPA.split('.')[0]],
+                        MCC: MCC,
                         PAYEE_VPA: PAYEE_VPA,
                         G: 'SMB',
                         H: "SBM".concat(faker_1.faker.string.numeric(7)),

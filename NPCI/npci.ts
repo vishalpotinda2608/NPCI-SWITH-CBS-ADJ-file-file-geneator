@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { NPCI_TXN } from '../Models/NPCI_TXN.model';
-import { beneficiaryTypes, generateRandomTime, MCC_CODE, merchantVPAs } from '../Constants/constant';
+import { beneficiaryTypes, generateRandomTime } from '../Constants/constant';
 //NPCI
 
-export function* generateNpciData(count: number, date: string,commonData): IterableIterator<NPCI_TXN> {
+export function* generateNpciData(count: number, date: string, commonData): IterableIterator<NPCI_TXN> {
     for (let i = 0; i < count; i++) {
-        const { TXNID, AMOUNT,NPCI_CODE ,PAYEE_VPA,PAYER_VPA,RRN} = commonData[i];
+        const { TXNID, AMOUNT, NPCI_CODE, PAYEE_VPA, PAYER_VPA, RRN, MCC, TIME } = commonData[i];
         yield {
             NPCI_TXN_TYPE: 'TX',
             NPCI_STATUS: 'U2',
@@ -13,7 +13,7 @@ export function* generateNpciData(count: number, date: string,commonData): Itera
             RRN: RRN,
             NPCI_CODE: NPCI_CODE[0],
             DATE: date,
-            TIME: generateRandomTime(),
+            TIME: TIME ?? generateRandomTime(),
             AMOUNT: (AMOUNT*100).toFixed(0),
             A: '',
             B: '1',
@@ -23,7 +23,7 @@ export function* generateNpciData(count: number, date: string,commonData): Itera
             E: '0',
             PAYER_VPA:PAYER_VPA ,
             F: faker.helpers.arrayElement(beneficiaryTypes),
-            MCC: MCC_CODE[PAYEE_VPA.split('.')[0]],
+            MCC: MCC,
             PAYEE_VPA: PAYEE_VPA,
             G: 'SMB',
             H: `SBM${faker.string.numeric(7)}`,

@@ -66,19 +66,21 @@ export const switchHeaders = [
 ];
 
 export const cbsHeaders = [
-  { id: "A", title: "A" },
-  { id: "DATE", title: "DATE" },
-  { id: "AMOUNT", title: "AMOUNT" },
-  { id: "B", title: "B" },
-  { id: "C", title: "C" },
-  { id: "D", title: "D" },
-  { id: "E", title: "E" },
-  { id: "F", title: "F" },
-  { id: "G", title: "G" },
+  { id: "TRAN_ID", title: "TRAN_ID" },
+  { id: "TRAN_DATE", title: "TRAN_DATE" },
+  { id: "TRAN_AMT", title: "TRAN_AMT" },
+  { id: "VALUE_DATE", title: "VALUE_DATE" },
+  { id: "CR_SOL_ID", title: "CR_SOL_ID" },
+  { id: "DR_SOL_ID", title: "DR_SOL_ID" },
+  { id: "CR_ACCT_NO", title: "CR_ACCT_NO" },
+  { id: "DR_ACCT_NO", title: "DR_ACCT_NO" },
   { id: "RRN", title: "RRN" },
-  { id: "H", title: "H" },
-  { id: "TXNID", title: "TXNID" },
+  { id: "UPI_TXN_ID", title: "UPI_TXN_ID" },
 ];
+
+export const CBS_SOL_ID = "2650";
+export const CBS_CR_ACCT_NO = "27220001182650";
+export const CBS_DR_ACCT_NO = "19025003182650";
 
 export const adjustHeaders = [
   { id: "Txnuid", title: "Txnuid" },
@@ -213,6 +215,62 @@ export const payerVpas = [
   "@paytm",
 ];
 
+export type AuthCycle = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+export type DisputeCycle = 1 | 2;
+
+export interface CycleWindow {
+  startHour: number;
+  endHour: number;
+}
+
+/** NPCI OC 222 — AUTH settlement windows (Annexure I). */
+export const AUTH_CYCLE_WINDOWS: Record<AuthCycle, CycleWindow> = {
+  1: { startHour: 21, endHour: 0 },
+  2: { startHour: 0, endHour: 5 },
+  3: { startHour: 5, endHour: 7 },
+  4: { startHour: 7, endHour: 9 },
+  5: { startHour: 9, endHour: 11 },
+  6: { startHour: 11, endHour: 13 },
+  7: { startHour: 13, endHour: 15 },
+  8: { startHour: 15, endHour: 17 },
+  9: { startHour: 17, endHour: 19 },
+  10: { startHour: 19, endHour: 21 },
+};
+
+/** NPCI OC 222 — Dispute settlement windows DC1 / DC2. */
+export const DISPUTE_CYCLE_WINDOWS: Record<DisputeCycle, CycleWindow> = {
+  1: { startHour: 0, endHour: 16 },
+  2: { startHour: 16, endHour: 0 },
+};
+
+export const AUTH_CYCLES: AuthCycle[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+/** Random HHMMSS inside a settlement-cycle window. */
+export function generateTimeInCycle(
+  _baseDate: Date,
+  window: CycleWindow
+): string {
+  const startMins = window.startHour * 60;
+  const endMins = window.endHour * 60;
+  const span =
+    endMins > startMins
+      ? endMins - startMins
+      : 24 * 60 - startMins + endMins;
+
+  const offset = Math.floor(Math.random() * span);
+  let totalMins = startMins + offset;
+  if (totalMins >= 24 * 60) totalMins -= 24 * 60;
+
+  const h = Math.floor(totalMins / 60);
+  const m = totalMins % 60;
+  const s = Math.floor(Math.random() * 60);
+  return `${String(h).padStart(2, "0")}${String(m).padStart(2, "0")}${String(s).padStart(2, "0")}`;
+}
+
+export function formatNpciTimeToColon(timeHHMMSS: string): string {
+  return `${timeHHMMSS.slice(0, 2)}:${timeHHMMSS.slice(2, 4)}:${timeHHMMSS.slice(4, 6)}`;
+}
+
 export function generateRandomTime() {
   const hours = String(Math.floor(Math.random() * 24)).padStart(2, "0");
   const minutes = String(Math.floor(Math.random() * 60)).padStart(2, "0");
@@ -226,72 +284,25 @@ export function generateRandomTimeHHMMSS() {
   return `${hours}:${minutes}:${seconds}`;
 }
 
-export const merchantVPAs = [
-  // Digital Goods: Games-5816
-  "gamming.car@sbm",
-  "gamming.bike@sbm",
-  "gamming.truck@sbm",
-  "gamming.boat@sbm",
-  "gamming.airplane@sbm",
-  "gamming.scooter@sbm",
-  "gamming.helmet@sbm",
-  "gamming.robot@sbm",
-  "gamming.submarine@sbm",
-  "gamming.drone@sbm",
-  "bookerr.npstltdindia@sbm",
+/** Populated at startup from ClickHouse `entity_credentials_uat`. */
+export let merchantCredentials: { vpa: string; mcc: string }[] = [];
 
-  //Fast Food Restaurants-5814
-  "dinning.pizza@sbm",
-  "dinning.burger@sbm",
-  "dinning.sushi@sbm",
-  "dinning.pasta@sbm",
-  "dinning.tacos@sbm",
-  "dinning.soup@sbm",
-  "dinning.salad@sbm",
-  "dinning.steak@sbm",
-  "dinning.dessert@sbm",
-  "dinning.vegetarian@sbm",
-  "bookerr.npstltdindia@sbm",
+/** VPA list derived from `merchantCredentials` for random selection. */
+export let merchantVPAs: string[] = [];
 
-  // Grocery Stores, Supermarkets-5411
-  "grocery.freshmart@sbm",
-  "grocery.marketplace@sbm",
-  "grocery.sbmrite@sbm",
-  "grocery.foodland@sbm",
-  "grocery.greenbasket@sbm",
-  "grocery.dailygrocer@sbm",
-  "grocery.bulkstore@sbm",
-  "grocery.organic@sbm",
-  "grocery.corner@sbm",
-  "grocery.town@sbm",
-  "bookerr.npstltdindia@sbm",
+export function setMerchantCredentials(
+  credentials: { vpa: string; mcc: string }[]
+): void {
+  merchantCredentials.length = 0;
+  merchantCredentials.push(...credentials);
+  merchantVPAs.length = 0;
+  merchantVPAs.push(...credentials.map((row) => row.vpa));
+}
 
-  // Travel Agencies - 4722
-  "traveler.explore@sbm",
-  "traveler.wander@sbm",
-  "traveler.adventure@sbm",
-  "traveler.getaway@sbm",
-  "traveler.destinations@sbm",
-  "traveler.escape@sbm",
-  "traveler.vacation@sbm",
-  "traveler.tour@sbm",
-  "traveler.globetrot@sbm",
-  "traveler.expedition@sbm",
-  "bookerr.npstltdindia@sbm",
-
-  // Telecommunication Services-4814
-  "telecom.mobile@sbm",
-  "telecom.internet@sbm",
-  "telecom.cable@sbm",
-  "telecom.voip@sbm",
-  "telecom.fiber@sbm",
-  "telecom.data@sbm",
-  "telecom.broadband@sbm",
-  "telecom.satellite@sbm",
-  "telecom.wireless@sbm",
-  "telecom.convergence@sbm",
-  "bookerr.npstltdindia@sbm",
-];
+export function setMerchantVPAs(vpas: string[]): void {
+  merchantVPAs.length = 0;
+  merchantVPAs.push(...vpas);
+}
 
 export const MCC_CODE = {
   gamming: "5816",
@@ -303,6 +314,14 @@ export const MCC_CODE = {
 };
 
 //DATE
+
+/** yyyy-MM-dd HH:mm:ss — CBS TRAN_DATE / VALUE_DATE. */
+export function formatCbsTranDate(date: Date): string {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${year}-${month}-${day} 00:00:00`;
+}
 
 // Function to format date to 'DD-MM-YYYY HH:mm:ss' format
 export function formatDateToDDMMYYYYHHMMSS(date: Date): string {
@@ -320,6 +339,75 @@ export function formatDate(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = String(date.getFullYear()).slice(-2);
   return `${month}${day}${year}`;
+}
+
+/** DDMMYY — used in NPCI / CBS / SWITCH upload filenames. */
+export function formatDateDDMMYY(date: Date): string {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = String(date.getFullYear()).slice(-2);
+  return `${day}${month}${year}`;
+}
+
+export const NPCI_FILE_CONFIG = {
+  side: "ISS" as "ISS" | "ACQ",
+  bank: "SBF",
+  cycle: 3,
+};
+
+/** UPIMERCHANTRAWDATA(ISS|ACQ)<BANK>(DDMMYY)_<CYCLE>C.csv */
+export function buildNpciFilename(
+  date: Date,
+  options: Partial<typeof NPCI_FILE_CONFIG> = {}
+): string {
+  const { side, bank, cycle } = { ...NPCI_FILE_CONFIG, ...options };
+  return `UPIMERCHANTRAWDATA${side}${bank}${formatDateDDMMYY(date)}_${cycle}C.csv`;
+}
+
+/** Switch_File(DDMMYY).csv */
+export function buildSwitchFilename(date: Date): string {
+  return `Switch_File${formatDateDDMMYY(date)}.csv`;
+}
+
+/** UPI_Cbs(DDMMYY).csv */
+export function buildCbsFilename(date: Date): string {
+  return `UPI_Cbs${formatDateDDMMYY(date)}.csv`;
+}
+
+const ADJUSTMENT_MONTHS = [
+  "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+  "JUL", "AUG", "SEP", "OCT", "NOV", "DEC",
+];
+
+/** UPI Adjustment Report_<BANK>_<DDMONYYYY>_DC<n>.csv */
+export function buildAdjustmentFilename(
+  date: Date,
+  disputeCycle: DisputeCycle
+): string {
+  const day = String(date.getDate()).padStart(2, "0");
+  const mon = ADJUSTMENT_MONTHS[date.getMonth()];
+  const year = date.getFullYear();
+  return `UPI Adjustment Report_${NPCI_FILE_CONFIG.bank}_${day}${mon}${year}_DC${disputeCycle}.csv`;
+}
+
+/** DD-MM-YYYY HH:mm:ss for SWITCH from NPCI TIME (HHMMSS) on baseDate. */
+export function formatSwitchDateFromNpciTime(
+  baseDate: Date,
+  timeHHMMSS: string
+): string {
+  const txnDate = new Date(baseDate);
+  txnDate.setHours(
+    Number(timeHHMMSS.slice(0, 2)),
+    Number(timeHHMMSS.slice(2, 4)),
+    Number(timeHHMMSS.slice(4, 6))
+  );
+  const day = String(txnDate.getDate()).padStart(2, "0");
+  const month = String(txnDate.getMonth() + 1).padStart(2, "0");
+  const year = txnDate.getFullYear();
+  const hours = String(txnDate.getHours()).padStart(2, "0");
+  const minutes = String(txnDate.getMinutes()).padStart(2, "0");
+  const seconds = String(txnDate.getSeconds()).padStart(2, "0");
+  return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
 }
 
 export function formatFullDateWithTimeSWITCH(date: Date): string {
