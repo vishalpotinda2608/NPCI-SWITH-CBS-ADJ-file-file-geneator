@@ -1,13 +1,13 @@
-import { Faker, faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { ADJUSTMENT } from '../Models/ADJUSTMENT.model';
-import { adjustmentType, beneficiaryTypes } from '../Constants/constant';
+import { adjustmentType, beneficiaryTypes, formatNpciTimeToColon } from '../Constants/constant';
 
 
-// SWITCH
-export function* generateAdjustmentData(count: number, date: string,commonData): IterableIterator<ADJUSTMENT> {
+// ADJUSTMENT
+export function* generateAdjustmentData(count: number, date: string, commonData): IterableIterator<ADJUSTMENT> {
     for (let i = 0; i < count; i++) {
-        const { TXNID, AMOUNT ,NPCI_CODE} = commonData[i];
-        if(NPCI_CODE[0]=='RB' || NPCI_CODE[0]=='0'){
+        const { TXNID, AMOUNT, NPCI_CODE, TIME, RRN } = commonData[i];
+        if(NPCI_CODE[0]=='RB' || NPCI_CODE[0]=='0' || NPCI_CODE[0]=='00'){
             const uid=faker.string.numeric(10);
             const adjType=faker.helpers.arrayElement(adjustmentType)
             const rem=faker.helpers.arrayElement(['SBL',beneficiaryTypes[Math.floor(Math.random()*20)],'SBL']);
@@ -21,8 +21,8 @@ export function* generateAdjustmentData(count: number, date: string,commonData):
                 "Beneficiery": ben,
                 "Response": faker.helpers.arrayElement(['0','RB','RR','R9']),
                 "Txndate": date,
-                "Txntime": `${new Date(date).getHours()}:${new Date(date).getMinutes()}:${new Date(date).getSeconds()}`,
-                "RRN": faker.string.numeric(12),
+                "Txntime": TIME ? formatNpciTimeToColon(TIME) : "10:30:00",
+                "RRN": RRN ?? faker.string.numeric(12),
                 "Terminalid": "159332",
                 "Ben_Mobile_No": `9${faker.string.numeric(12)}`,
                 "Rem_Mobile_No": `7${faker.string.numeric(12)}`,

@@ -1,4 +1,37 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -9,8 +42,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -36,13 +69,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs = require("fs");
-var path = require("path");
+var fs = __importStar(require("fs"));
+var path = __importStar(require("path"));
 var csv_writer_1 = require("csv-writer");
 var faker_1 = require("@faker-js/faker");
 var npci_1 = require("./NPCI/npci");
 var constant_1 = require("./Constants/constant");
-var ROW_DATA = 1000000;
+var adjustment_1 = require("./ADJUSTMENT/adjustment");
+var timeout_1 = require("./TIMEOUT/timeout");
+var clickhouse_1 = require("./db/clickhouse");
+var ROW_DATA = 5;
 var ensureDirectoryExists = function (filePath) {
     var directory = path.dirname(filePath);
     if (!fs.existsSync(directory)) {
@@ -60,7 +96,7 @@ function writeDataToCSV(filename, headers, dataGenerator) {
                         path: filename,
                         header: headers,
                     });
-                    batchSize = 10000;
+                    batchSize = 100000;
                     batch = [];
                     dataArray = Array.from(dataGenerator());
                     _i = 0, dataArray_1 = dataArray;
@@ -107,27 +143,32 @@ function writeDataToCSV(filename, headers, dataGenerator) {
         });
     });
 }
-// Generate common TXNID and AMOUNT once and reuse
-var generateCommonData = function (date, count) {
-    return Array.from({ length: count }, function () { return ({
-        TXNID: faker_1.faker.database.mongodbObjectId(),
-        AMOUNT: faker_1.faker.finance.amount(),
-        NPCI_CODE: faker_1.faker.helpers.arrayElement([
-            ["00", "SUCCESS"],
-            ["00", "SUCCESS"],
-            ["RB", "DEEMED"],
-            ["Z9", "FAILURE"],
-            ["00", "FAILURE"],
-            ["Z7", "FAILURE"],
-            ["Z7", "SUCCESS"],
-            ["00", "SUCCESS"],
-            ["00", "SUCCESS"],
-        ]),
-        PAYEE_VPA: faker_1.faker.helpers.arrayElement(constant_1.merchantVPAs),
-        PAYER_VPA: "".concat(faker_1.faker.internet.email().split("@")[0]).concat(faker_1.faker.helpers.arrayElement(constant_1.payerVpas)),
-        RRN: faker_1.faker.string.numeric(12),
-        BATCH_ID: faker_1.faker.database.mongodbObjectId()
-    }); });
+var generateCommonData = function (date, count, cycleWindow) {
+    return Array.from({ length: count }, function () {
+        var merchant = faker_1.faker.helpers.arrayElement(constant_1.merchantCredentials);
+        return {
+            TXNID: faker_1.faker.database.mongodbObjectId(),
+            AMOUNT: faker_1.faker.finance.amount(),
+            NPCI_CODE: faker_1.faker.helpers.arrayElement([
+                ["00", "SUCCESS"],
+                ["00", "SUCCESS"],
+                ["RB", "DEEMED"],
+                ["Z9", "FAILURE"],
+                ["00", "FAILURE"],
+                ["Z7", "FAILURE"],
+                ["Z7", "SUCCESS"],
+                ["00", "SUCCESS"],
+                ["00", "SUCCESS"],
+            ]),
+            PAYEE_VPA: merchant.vpa,
+            MCC: merchant.mcc,
+            PAYER_VPA: "".concat(faker_1.faker.internet.email().split("@")[0]).concat(faker_1.faker.helpers.arrayElement(constant_1.payerVpas)),
+            RRN: faker_1.faker.string.numeric(12),
+            TIME: cycleWindow
+                ? (0, constant_1.generateTimeInCycle)(date, cycleWindow)
+                : (0, constant_1.generateTimeInCycle)(date, constant_1.AUTH_CYCLE_WINDOWS[5]),
+        };
+    });
 };
 var generateDataForDateRange = function (startDate, numberOfDays, monthName) {
     var endDate = new Date(startDate);
@@ -137,22 +178,66 @@ var generateDataForDateRange = function (startDate, numberOfDays, monthName) {
         // Format dates for each file
         var formattedDate = (0, constant_1.formatDateToDDMMYYYYHHMMSS)(currentDate);
         var npciFormattedDate = (0, constant_1.formatDate)(currentDate);
-        var switchFormattedDate = (0, constant_1.formatFullDateWithTimeSWITCH)(currentDate);
         var cbsFormattedDate = (0, constant_1.formatFullDateWithTimeCBS)(currentDate);
         var cbsFormatteTimeoutFile = (0, constant_1.formatFullDateWithTimeout)(currentDate);
         var filenameDate = (0, constant_1.formatDateForFilename)(currentDate);
-        // Generate data for the current date
-        // Generate data for the current date
-        var commonData = generateCommonData(currentDate, ROW_DATA);
-        // Write data to CSV files
-        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/NPCI_DATA/UPIMERCHANTRAWDATAACQSBM").concat(npciFormattedDate, ".csv"), constant_1.npciHeaders, function () { return (0, npci_1.generateNpciData)(ROW_DATA, npciFormattedDate, commonData); });
+        var allCycleCommonData = [];
+        var _loop_2 = function (cycle) {
+            var cycleCommonData = generateCommonData(currentDate, ROW_DATA, constant_1.AUTH_CYCLE_WINDOWS[cycle]);
+            allCycleCommonData.push.apply(allCycleCommonData, cycleCommonData);
+            writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/NPCI_DATA/").concat((0, constant_1.buildNpciFilename)(currentDate, { cycle: cycle })), constant_1.npciHeaders, function () { return (0, npci_1.generateNpciData)(ROW_DATA, npciFormattedDate, cycleCommonData); });
+        };
+        for (var _i = 0, AUTH_CYCLES_1 = constant_1.AUTH_CYCLES; _i < AUTH_CYCLES_1.length; _i++) {
+            var cycle = AUTH_CYCLES_1[_i];
+            _loop_2(cycle);
+        }
+        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/SWITCH_DATA/").concat((0, constant_1.buildSwitchFilename)(currentDate)), constant_1.switchHeaders, function () {
+            return (0, switch_1.generateSwitchData)(allCycleCommonData.length, currentDate, allCycleCommonData);
+        });
+        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/CBS_DATA/").concat((0, constant_1.buildCbsFilename)(currentDate)), constant_1.cbsHeaders, function () {
+            return (0, cbs_1.generateCbsData)(allCycleCommonData.length, currentDate, allCycleCommonData);
+        });
+        var _loop_3 = function (dc) {
+            var disputeCommonData = generateCommonData(currentDate, ROW_DATA, constant_1.DISPUTE_CYCLE_WINDOWS[dc]);
+            writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/ADJUSTMENT/").concat((0, constant_1.buildAdjustmentFilename)(currentDate, dc)), constant_1.adjustHeaders, function () {
+                return (0, adjustment_1.generateAdjustmentData)(ROW_DATA, cbsFormattedDate, disputeCommonData);
+            });
+        };
+        for (var _a = 0, _b = [1, 2]; _a < _b.length; _a++) {
+            var dc = _b[_a];
+            _loop_3(dc);
+        }
+        writeDataToCSV("".concat(monthName, "/").concat(filenameDate, "/TIMEOUT_DATA/UPI Time Out Cases Report_SBL_").concat(cbsFormatteTimeoutFile, ".csv"), constant_1.timeoutHeaders, function () { return (0, timeout_1.generateTimeoutData)(ROW_DATA, cbsFormattedDate, allCycleCommonData); });
     };
     for (var date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         _loop_1(date);
     }
 };
-// Usage example
-var startDate = new Date(2025, 4, 3); // 7 - Aug
-var numberOfDays = 1; // Number of days to generate data for
-var monthName = 'MAY';
-generateDataForDateRange(startDate, numberOfDays, monthName);
+function main() {
+    return __awaiter(this, void 0, void 0, function () {
+        var merchants, startDate, numberOfDays, monthName;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, (0, clickhouse_1.fetchMerchantCredentials)()];
+                case 1:
+                    merchants = _a.sent();
+                    if (merchants.length === 0) {
+                        throw new Error("No merchant VPAs found in entity_credentials_uat. Check ClickHouse connection and table data.");
+                    }
+                    (0, constant_1.setMerchantCredentials)(merchants);
+                    console.log("Loaded ".concat(merchants.length, " merchant VPAs from ClickHouse"));
+                    startDate = new Date(2026, 5, 2);
+                    numberOfDays = 1;
+                    monthName = "JUNE";
+                    generateDataForDateRange(startDate, numberOfDays, monthName);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+main()
+    .catch(function (error) {
+    console.error("Failed to generate fake data:", error);
+    process.exitCode = 1;
+})
+    .finally(function () { return (0, clickhouse_1.closeClickhouseClient)(); });

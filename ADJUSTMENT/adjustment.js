@@ -1,7 +1,7 @@
 "use strict";
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -30,9 +30,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateAdjustmentData = generateAdjustmentData;
 var faker_1 = require("@faker-js/faker");
 var constant_1 = require("../Constants/constant");
-// SWITCH
+// ADJUSTMENT
 function generateAdjustmentData(count, date, commonData) {
-    var i, _a, TXNID, AMOUNT, NPCI_CODE, uid, adjType, rem, ben;
+    var i, _a, TXNID, AMOUNT, NPCI_CODE, TIME, RRN, uid, adjType, rem, ben;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -40,8 +40,8 @@ function generateAdjustmentData(count, date, commonData) {
                 _b.label = 1;
             case 1:
                 if (!(i < count)) return [3 /*break*/, 4];
-                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, NPCI_CODE = _a.NPCI_CODE;
-                if (!(NPCI_CODE[0] == 'RB' || NPCI_CODE[0] == '0')) return [3 /*break*/, 3];
+                _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, NPCI_CODE = _a.NPCI_CODE, TIME = _a.TIME, RRN = _a.RRN;
+                if (!(NPCI_CODE[0] == 'RB' || NPCI_CODE[0] == '0' || NPCI_CODE[0] == '00')) return [3 /*break*/, 3];
                 uid = faker_1.faker.string.numeric(10);
                 adjType = faker_1.faker.helpers.arrayElement(constant_1.adjustmentType);
                 rem = faker_1.faker.helpers.arrayElement(['SBL', constant_1.beneficiaryTypes[Math.floor(Math.random() * 20)], 'SBL']);
@@ -55,8 +55,8 @@ function generateAdjustmentData(count, date, commonData) {
                         "Beneficiery": ben,
                         "Response": faker_1.faker.helpers.arrayElement(['0', 'RB', 'RR', 'R9']),
                         "Txndate": date,
-                        "Txntime": "".concat(new Date(date).getHours(), ":").concat(new Date(date).getMinutes(), ":").concat(new Date(date).getSeconds()),
-                        "RRN": faker_1.faker.string.numeric(12),
+                        "Txntime": TIME ? (0, constant_1.formatNpciTimeToColon)(TIME) : "10:30:00",
+                        "RRN": RRN !== null && RRN !== void 0 ? RRN : faker_1.faker.string.numeric(12),
                         "Terminalid": "159332",
                         "Ben_Mobile_No": "9".concat(faker_1.faker.string.numeric(12)),
                         "Rem_Mobile_No": "7".concat(faker_1.faker.string.numeric(12)),

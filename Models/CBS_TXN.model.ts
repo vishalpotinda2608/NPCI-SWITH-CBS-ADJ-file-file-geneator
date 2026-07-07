@@ -1,14 +1,12 @@
 export interface CBS_TXN {
-    A: any;
-    DATE: string;
-    AMOUNT: string | null;
-    B: any;
-    C: any;
-    D: any | null;
-    E: string;
-    F: string | null;
-    G: any;
-    RRN: string | null;
-    H: string | null;
-    TXNID: string;
+    TRAN_ID: string;
+    TRAN_DATE: string;
+    TRAN_AMT: string;
+    VALUE_DATE: string;
+    CR_SOL_ID: string;
+    DR_SOL_ID: string;
+    CR_ACCT_NO: string;
+    DR_ACCT_NO: string;
+    RRN: string;
+    UPI_TXN_ID: string;
 }
