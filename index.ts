@@ -57,7 +57,7 @@ async function writeDataToCSV(
     path: filename,
     header: headers,
   });
-  const batchSize = 100000;
+  const batchSize = 10000;
   let batch: any[] = [];
   const dataArray = Array.from(dataGenerator());
   for (let record of dataArray) {

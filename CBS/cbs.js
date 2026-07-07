@@ -65,9 +65,20 @@ function generateCbsData(count, date, commonData) {
                 _b.sent();
                 _b.label = 3;
             case 3:
+                if (batchCount === BATCH_SIZE) {
+                    batchId = BATCH_ID;
+                    batchCount = 0;
+                    batchTotalSum = 0;
+                }
+                else {
+                    batchCount += 1;
+                    batchTotalSum += parseFloat(AMOUNT);
+                }
+                _b.label = 4;
+            case 4:
                 i++;
                 return [3 /*break*/, 1];
-            case 4: return [2 /*return*/];
+            case 5: return [2 /*return*/];
         }
     });
 }

@@ -61,6 +61,9 @@ function generateSwitchData(count, baseDate, commonData) {
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
+                batchId = "";
+                batchCount = 0;
+                BATCH_SIZE = 10;
                 i = 0;
                 _b.label = 1;
             case 1:
@@ -86,6 +89,13 @@ function generateSwitchData(count, baseDate, commonData) {
                     }];
             case 2:
                 _b.sent();
+                if (batchCount == BATCH_SIZE) {
+                    batchId = BATCH_ID;
+                    batchCount = 0;
+                }
+                else {
+                    batchCount += 1;
+                }
                 _b.label = 3;
             case 3:
                 i++;
