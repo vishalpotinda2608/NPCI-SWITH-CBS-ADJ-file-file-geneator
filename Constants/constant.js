@@ -94,7 +94,6 @@ exports.switchHeaders = [
     { id: "PayerName", title: "PayerName" },
     { id: "Txn Id", title: "Txn Id" },
     { id: "MCC", title: "MCC" },
-    { id: "BATCH_ID", title: "BATCH_ID" },
 ];
 exports.cbsHeaders = [
     { id: "TRAN_ID", title: "TRAN_ID" },

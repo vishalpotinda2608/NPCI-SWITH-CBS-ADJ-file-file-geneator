@@ -74,11 +74,13 @@ var path = __importStar(require("path"));
 var csv_writer_1 = require("csv-writer");
 var faker_1 = require("@faker-js/faker");
 var npci_1 = require("./NPCI/npci");
+var switch_1 = require("./SWITCH/switch");
+var cbs_1 = require("./CBS/cbs");
 var constant_1 = require("./Constants/constant");
 var adjustment_1 = require("./ADJUSTMENT/adjustment");
 var timeout_1 = require("./TIMEOUT/timeout");
 var clickhouse_1 = require("./db/clickhouse");
-var ROW_DATA = 50000;
+var ROW_DATA = 2;
 var ensureDirectoryExists = function (filePath) {
     var directory = path.dirname(filePath);
     if (!fs.existsSync(directory)) {
@@ -96,7 +98,7 @@ function writeDataToCSV(filename, headers, dataGenerator) {
                         path: filename,
                         header: headers,
                     });
-                    batchSize = 100000;
+                    batchSize = 10000;
                     batch = [];
                     dataArray = Array.from(dataGenerator());
                     _i = 0, dataArray_1 = dataArray;
@@ -226,7 +228,7 @@ function main() {
                     }
                     (0, constant_1.setMerchantCredentials)(merchants);
                     console.log("Loaded ".concat(merchants.length, " merchant VPAs from ClickHouse"));
-                    startDate = new Date(2026, 5, 6);
+                    startDate = new Date(2026, 5, 7);
                     numberOfDays = 1;
                     monthName = "JUNE";
                     generateDataForDateRange(startDate, numberOfDays, monthName);

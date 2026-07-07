@@ -12,5 +12,4 @@ export interface SWITCH_TXN {
     'PayerName': any;
     "Txn Id": string;
     MCC: string | null;
-    BATCH_ID:string
 }

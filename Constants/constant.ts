@@ -63,7 +63,6 @@ export const switchHeaders = [
   { id: "PayerName", title: "PayerName" },
   { id: "Txn Id", title: "Txn Id" },
   { id: "MCC", title: "MCC" },
-  { id: "BATCH_ID", title: "BATCH_ID" },
 ];
 
 export const cbsHeaders = [
