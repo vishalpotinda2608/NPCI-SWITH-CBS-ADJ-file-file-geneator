@@ -37,7 +37,7 @@ import {
   fetchMerchantCredentials,
 } from "./db/clickhouse";
 
-const ROW_DATA = 5000;
+const ROW_DATA = 50000;
 
 const ensureDirectoryExists = (filePath: string) => {
   const directory = path.dirname(filePath);
@@ -96,6 +96,7 @@ const generateCommonData = (
       NPCI_CODE: faker.helpers.arrayElement([
         ["00", "SUCCESS"],
         ["00", "SUCCESS"],
+        ["0", "SUCCESS"],
         ["RB", "DEEMED"],
         ["Z9", "FAILURE"],
         ["00", "FAILURE"],
@@ -208,7 +209,7 @@ async function main() {
   setMerchantCredentials(merchants);
   console.log(`Loaded ${merchants.length} merchant VPAs from ClickHouse`);
 
-  const startDate = new Date(2026, 5, 5); // 7 - Jun
+  const startDate = new Date(2026, 5, 6); // 7 - Jun
   const numberOfDays = 1;
   const monthName = "JUNE";
   generateDataForDateRange(startDate, numberOfDays, monthName);

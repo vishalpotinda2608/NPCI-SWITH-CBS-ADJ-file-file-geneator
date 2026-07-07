@@ -78,6 +78,9 @@ export const cbsHeaders = [
   { id: "UPI_TXN_ID", title: "UPI_TXN_ID" },
 ];
 
+/** NPCI response codes treated as successful — aligned with MMS billing/recon. */
+export const SUCCESS_NPCI_CODES = ["00", "RB", "0"] as const;
+
 export const CBS_SOL_ID = "2650";
 export const CBS_CR_ACCT_NO = "27220001182650";
 export const CBS_DR_ACCT_NO = "19025003182650";

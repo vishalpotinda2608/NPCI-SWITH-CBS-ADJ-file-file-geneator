@@ -11,7 +11,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NPCI_FILE_CONFIG = exports.MCC_CODE = exports.merchantVPAs = exports.merchantCredentials = exports.AUTH_CYCLES = exports.DISPUTE_CYCLE_WINDOWS = exports.AUTH_CYCLE_WINDOWS = exports.payerVpas = exports.beneficiaryTypes = exports.adjustmentType = exports.adjustHeaders = exports.CBS_DR_ACCT_NO = exports.CBS_CR_ACCT_NO = exports.CBS_SOL_ID = exports.cbsHeaders = exports.switchHeaders = exports.timeoutHeaders = exports.npciHeaders = void 0;
+exports.NPCI_FILE_CONFIG = exports.MCC_CODE = exports.merchantVPAs = exports.merchantCredentials = exports.AUTH_CYCLES = exports.DISPUTE_CYCLE_WINDOWS = exports.AUTH_CYCLE_WINDOWS = exports.payerVpas = exports.beneficiaryTypes = exports.adjustmentType = exports.adjustHeaders = exports.CBS_DR_ACCT_NO = exports.CBS_CR_ACCT_NO = exports.CBS_SOL_ID = exports.SUCCESS_NPCI_CODES = exports.cbsHeaders = exports.switchHeaders = exports.timeoutHeaders = exports.npciHeaders = void 0;
 exports.generateTimeInCycle = generateTimeInCycle;
 exports.formatNpciTimeToColon = formatNpciTimeToColon;
 exports.generateRandomTime = generateRandomTime;
@@ -107,6 +107,8 @@ exports.cbsHeaders = [
     { id: "RRN", title: "RRN" },
     { id: "UPI_TXN_ID", title: "UPI_TXN_ID" },
 ];
+/** NPCI response codes treated as successful — aligned with MMS billing/recon. */
+exports.SUCCESS_NPCI_CODES = ["00", "RB", "0"];
 exports.CBS_SOL_ID = "2650";
 exports.CBS_CR_ACCT_NO = "27220001182650";
 exports.CBS_DR_ACCT_NO = "19025003182650";

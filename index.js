@@ -80,7 +80,7 @@ var constant_1 = require("./Constants/constant");
 var adjustment_1 = require("./ADJUSTMENT/adjustment");
 var timeout_1 = require("./TIMEOUT/timeout");
 var clickhouse_1 = require("./db/clickhouse");
-var ROW_DATA = 5;
+var ROW_DATA = 50000;
 var ensureDirectoryExists = function (filePath) {
     var directory = path.dirname(filePath);
     if (!fs.existsSync(directory)) {
@@ -154,6 +154,7 @@ var generateCommonData = function (date, count, cycleWindow) {
             NPCI_CODE: faker_1.faker.helpers.arrayElement([
                 ["00", "SUCCESS"],
                 ["00", "SUCCESS"],
+                ["0", "SUCCESS"],
                 ["RB", "DEEMED"],
                 ["Z9", "FAILURE"],
                 ["00", "FAILURE"],
@@ -178,7 +179,6 @@ var generateDataForDateRange = function (startDate, numberOfDays, monthName) {
     var _loop_1 = function (date) {
         var currentDate = new Date(date); // Clone the current date
         // Format dates for each file
-        var formattedDate = (0, constant_1.formatDateToDDMMYYYYHHMMSS)(currentDate);
         var npciFormattedDate = (0, constant_1.formatDate)(currentDate);
         var cbsFormattedDate = (0, constant_1.formatFullDateWithTimeCBS)(currentDate);
         var cbsFormatteTimeoutFile = (0, constant_1.formatFullDateWithTimeout)(currentDate);
@@ -228,7 +228,7 @@ function main() {
                     }
                     (0, constant_1.setMerchantCredentials)(merchants);
                     console.log("Loaded ".concat(merchants.length, " merchant VPAs from ClickHouse"));
-                    startDate = new Date(2026, 5, 2);
+                    startDate = new Date(2026, 5, 6);
                     numberOfDays = 1;
                     monthName = "JUNE";
                     generateDataForDateRange(startDate, numberOfDays, monthName);

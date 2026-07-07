@@ -5,6 +5,7 @@ import {
     CBS_DR_ACCT_NO,
     CBS_SOL_ID,
     formatCbsTranDate,
+    SUCCESS_NPCI_CODES,
 } from '../Constants/constant';
 
 function generateTranId(): string {
@@ -21,7 +22,7 @@ export function* generateCbsData(count: number, date: Date, commonData): Iterabl
 
     for (let i = 0; i < count; i++) {
         const { TXNID, AMOUNT, RRN, NPCI_CODE } = commonData[i];
-        if ((NPCI_CODE[0] == 'RB' && NPCI_CODE[1] == 'DEEMED') || (NPCI_CODE[0] == '00' && NPCI_CODE[1] == 'SUCCESS')) {
+        if ((SUCCESS_NPCI_CODES as readonly string[]).includes(NPCI_CODE[0])) {
             yield {
                 TRAN_ID: generateTranId(),
                 TRAN_DATE: tranDate,

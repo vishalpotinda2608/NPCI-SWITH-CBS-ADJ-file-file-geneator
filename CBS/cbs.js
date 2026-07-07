@@ -48,7 +48,7 @@ function generateCbsData(count, date, commonData) {
             case 1:
                 if (!(i < count)) return [3 /*break*/, 4];
                 _a = commonData[i], TXNID = _a.TXNID, AMOUNT = _a.AMOUNT, RRN = _a.RRN, NPCI_CODE = _a.NPCI_CODE;
-                if (!((NPCI_CODE[0] == 'RB' && NPCI_CODE[1] == 'DEEMED') || (NPCI_CODE[0] == '00' && NPCI_CODE[1] == 'SUCCESS'))) return [3 /*break*/, 3];
+                if (!constant_1.SUCCESS_NPCI_CODES.includes(NPCI_CODE[0])) return [3 /*break*/, 3];
                 return [4 /*yield*/, {
                         TRAN_ID: generateTranId(),
                         TRAN_DATE: tranDate,
